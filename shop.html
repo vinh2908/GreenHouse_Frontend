@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cửa Hàng Store - Green House</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="toast-container"></div>
+    <div id="authModal" class="modal"></div>
+
+<header class="glass-panel" style="margin: 20px auto; width: 95%; max-width: 1300px; border-radius: 100px; padding: 15px 40px; position: sticky; top: 20px; z-index: 9999;">
+        <div class="top-bar" style="border: none; padding: 0;">
+            <div class="logo"><i class="fas fa-bolt text-neon"></i> Green House</div>
+            <nav class="main-nav" style="padding: 0;">
+                <a href="index.html">Trang Chủ</a>
+                <a href="booking.html">Dịch Vụ Giúp Việc</a>
+                <a href="shop.html" class="active" style="color: #4E9F3D;">Cửa Hàng Store</a>
+            </nav>
+            <div class="user-actions">
+                <div class="icon-btn" onclick="openCart()" title="Giỏ hàng" style="background: #f4f9f5; padding: 10px; border-radius: 50%;">
+                    <i class="fas fa-shopping-bag" style="font-size: 18px; color: #1f2937;"></i>
+                    <span class="badge" id="cartCount" style="right: -2px; top: -2px;">0</span>
+                </div>
+                <div id="header-auth-section"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <section style="padding: 40px 0 20px;">
+            <div class="container reveal-up">
+                <div class="glass-panel" style="padding: 60px 40px; text-align: center; background: linear-gradient(135deg, rgba(13,110,253,0.05), rgba(255,255,255,0.9)); border-radius: 40px;">
+                    <div style="font-size: 50px; margin-bottom: 20px;">🛒</div>
+                    <h1 style="font-size: 45px; font-weight: 900; margin-bottom: 15px; color: #1f2937;">Cửa Hàng <span class="text-neon">Vật Tư Thông Minh</span></h1>
+                    <p style="font-size: 18px; color: #666; max-width: 600px; margin: 0 auto;">Các công cụ, hóa chất chuyên dụng được các chuyên gia của chúng tôi tin dùng, nay đã có mặt tại nhà bạn.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="container reveal-up">
+            <div class="grid-3" id="shop-product-grid">
+                <p style="text-align:center; width: 100%; color: #999;">Đang kết nối kho hàng...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="maidDetailModal" class="modal">
+        <div class="modal-content" style="width: 900px; max-width: 95%; border-radius: 24px; padding: 35px; overflow-y: auto; max-height: 90vh;">
+            <span class="close-modal" onclick="closeModal('maidDetailModal')" style="position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; z-index: 10;">×</span>
+            <div id="maidDetailBody"></div>
+        </div>
+    </div>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content" style="width:850px; max-width:95%; border-radius: 24px;">
+            <span class="close-modal" onclick="closeModal('cartModal')">×</span>
+            <h2 style="color:var(--primary); font-weight:900;"><i class="fas fa-shopping-cart"></i> Giỏ Hàng</h2>
+            <div id="cartList" style="max-height: 400px; overflow-y: auto; margin-top:15px;"></div>
+            <div style="margin-top:20px; display:flex; gap:10px; background:#f9f9f9; padding:15px; border-radius:15px;">
+                <input type="text" id="voucherCode" placeholder="Mã giảm giá" class="form-input" style="flex:1; border-radius:10px;">
+                <button type="button" onclick="applyVoucher()" class="btn-hyper" style="padding: 10px 20px;">ÁP DỤNG</button>
+            </div>
+            <div style="text-align: right; margin-top: 20px; border-top: 2px solid #eee; padding-top: 20px;">
+                <h3 style="font-weight: 900;">Tổng: <span id="cartTotal" style="color:#e91e63;">0 VNĐ</span></h3>
+                <button type="button" class="btn-hyper" style="padding: 12px 40px; margin-top:10px;" onclick="moFormThanhToan()">ĐẶT HÀNG NGAY</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content" style="width:500px; max-width:95%; border-radius: 24px;">
+            <span class="close-modal" onclick="closeModal('checkoutModal')">×</span>
+            <h2 style="color:#4CAF50; font-weight:900;"><i class="fas fa-truck"></i> Thanh Toán</h2>
+            <div id="checkoutItemsContainer" style="padding: 10px; background: #f8faf9; border-radius: 12px; border: 1px solid #e2e8f0; max-height: 180px; overflow-y: auto; margin-bottom: 15px;"></div>
+            <div style="text-align: left; margin-top: 15px;">
+                <label style="font-weight:800; margin-bottom:5px; display:block;">Họ và tên:</label>
+                <input type="text" id="ckName" class="form-input" style="width:100%; margin-bottom:15px; border-radius:10px;">
+                <label style="font-weight:800; margin-bottom:5px; display:block;">Số điện thoại:</label>
+                <input type="text" id="ckPhone" class="form-input" style="width:100%; margin-bottom:15px; border-radius:10px;">
+                <label style="font-weight:800; margin-bottom:5px; display:block;">Địa chỉ nhận hàng:</label>
+                <textarea id="ckAddress" rows="2" class="form-input" style="width:100%; margin-bottom:15px; border-radius:10px;"></textarea>
+                <label style="font-weight:800; margin-bottom:5px; display:block;">Phương thức:</label>
+                <select id="ckMethod" class="form-input" style="width:100%; margin-bottom:15px; border-radius:10px; font-weight: bold;" onchange="toggleQR()">
+                    <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+                    <option value="BANK">Chuyển khoản (QR)</option>
+                </select>
+                <div id="qrBox" style="display:none; text-align:center; background:#f4f9f5; padding:15px; border-radius:12px; border:1px solid #c8e6c9; margin-top:10px;">
+                    <p style="margin:0 0 10px 0; font-weight:800; color:#4E9F3D;">Quét mã thanh toán</p>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" style="width:150px; height:150px; border-radius:12px; border:3px solid #4E9F3D;">
+                    <p style="margin:10px 0 0 0; font-size:13px; font-weight:700;">Nội dung CK: <b style="color:#000;">DH<span id="qrMaDon"></span></b></p>
+                    <input type="file" id="billUpload" accept="image/*" style="display:block; margin:10px auto 0; font-size: 13px;" onchange="kiemTraBill()">
+                    <div id="billPreview" style="margin-top:10px; color:#4CAF50; font-weight: bold; font-size:13px; display:none;"><i class="fas fa-check-circle"></i> Đã tải ảnh!</div>
+                </div>
+            </div>
+            <div style="background:#f9f9f9; padding:15px; border-radius:12px; text-align:right; margin-bottom:20px; margin-top:15px;">
+                <span style="font-weight: 700;">Thành tiền:</span> <h3 style="margin:0; color:#e91e63; font-size:26px; font-weight: 900;" id="ckTotalText">0 VNĐ</h3>
+            </div>
+            <button type="button" id="btnXacNhan" class="btn-hyper" style="width:100%; padding:15px;" onclick="xacNhanDonHang()">HOÀN TẤT ĐƠN HÀNG</button>
+        </div>
+    </div>
+
+    <div class="chat-btn glass-panel" onclick="toggleChat()" style="background: rgba(78, 159, 61, 0.85); border: 2px solid rgba(255,255,255,0.5);"><i class="fas fa-comment-dots"></i></div>
+    <div class="chat-window" id="chatWindow" style="border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid #eee;">
+        <div class="chat-header" style="background: #1f2937;">
+            <span style="font-weight: 800;">Trợ Lý Ảo Green House</span><span onclick="toggleChat()" style="cursor:pointer; font-size: 20px;">×</span>
+        </div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-footer">
+            <input id="chatInput" placeholder="Nhập tin nhắn..." onkeypress="handleChat(event)" style="flex:1; padding: 12px 15px; border-radius: 50px; border: 1px solid #ddd; outline: none; background: #f9f9f9; font-weight: 600;">
+            <button onclick="sendChat()" style="background:#4E9F3D; color:white; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; margin-left: 10px; box-shadow: 0 5px 15px rgba(78, 159, 61, 0.3);">➤</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

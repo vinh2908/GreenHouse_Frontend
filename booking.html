@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Dịch Vụ Giúp Việc - Green House</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="toast-container"></div>
+    <div id="authModal" class="modal"></div>
+
+<header class="glass-panel" style="margin: 20px auto; width: 95%; max-width: 1300px; border-radius: 100px; padding: 15px 40px; position: sticky; top: 20px; z-index: 9999;">
+        <div class="top-bar" style="border: none; padding: 0;">
+            <div class="logo"><i class="fas fa-bolt text-neon"></i> Green House</div>
+            <nav class="main-nav" style="padding: 0;">
+                <a href="index.html">Trang Chủ</a>
+                <a href="booking.html" class="active" style="color: #4E9F3D;">Dịch Vụ Giúp Việc</a>
+                <a href="shop.html">Cửa Hàng Store</a>
+            </nav>
+            <div class="user-actions">
+                <div class="icon-btn" onclick="openCart()" title="Giỏ hàng" style="background: #f4f9f5; padding: 10px; border-radius: 50%;">
+                    <i class="fas fa-shopping-bag" style="font-size: 18px; color: #1f2937;"></i>
+                    <span class="badge" id="cartCount" style="right: -2px; top: -2px;">0</span>
+                </div>
+                <div id="header-auth-section"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <section style="padding: 40px 0 20px; position: relative; z-index: 50;">
+            <div class="container reveal-up">
+                <div class="glass-panel" style="padding: 60px 40px; text-align: center; background: linear-gradient(135deg, rgba(78,159,61,0.05), rgba(255,255,255,0.9)); border-radius: 40px;">
+                    <div style="font-size: 50px; margin-bottom: 20px;">✨</div>
+                    <h1 style="font-size: 45px; font-weight: 900; margin-bottom: 15px; color: #1f2937;">Tìm Chuyên Gia <span class="text-neon">Cho Gia Đình</span></h1>
+                    <p style="font-size: 18px; color: #666; max-width: 600px; margin: 0 auto;">Lựa chọn người đồng hành đáng tin cậy với hệ thống lọc và đánh giá minh bạch 100%.</p>
+                    
+                    <div class="glass-filter-wrapper">
+                        <div class="gf-item">
+                            <label><i class="fas fa-layer-group text-neon"></i> Gói Dịch Vụ</label>
+                            <div class="custom-dropdown" onclick="toggleDropdown(this)">
+                                <div class="dropdown-selected">
+                                    <span class="selected-text" id="text-filterSkill">Tất cả dịch vụ</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="dropdown-list">
+                                    <div class="dropdown-item active" onclick="selectOption(this, 'filterSkill', 'all')">Tất cả dịch vụ</div>
+                                    <div class="dropdown-item" onclick="selectOption(this, 'filterSkill', 'Nấu ăn')">Đầu bếp gia đình</div>
+                                    <div class="dropdown-item" onclick="selectOption(this, 'filterSkill', 'Trông trẻ')">Bảo mẫu / Chăm bé</div>
+                                    <div class="dropdown-item" onclick="selectOption(this, 'filterSkill', 'Dọn dẹp')">Tổng vệ sinh</div>
+                                    <div class="dropdown-item" onclick="selectOption(this, 'filterSkill', 'Làm vườn')">Chăm sóc cảnh quan</div>
+                                    <div class="dropdown-item" onclick="selectOption(this, 'filterSkill', 'Điện nước')">Bảo trì & Vệ sinh máy lạnh</div>
+                                </div>
+                                <input type="hidden" id="filterSkill" value="all">
+                            </div>
+                        </div>
+
+                        <div class="gf-item">
+                            <label><i class="fas fa-medal text-neon"></i> Hạng Nhân Viên</label>
+                            <div class="custom-dropdown" onclick="toggleDropdown(this)">
+                                <div class="dropdown-selected">
+                                    <span class="selected-text" id="text-filterExp">Mọi cấp độ</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="dropdown-list">
+                                    <div class="dropdown-item active" onclick="selectOption(this, 'filterExp', 'all')">Mọi cấp độ</div>
+                                    <div class="dropdown-item" onclick="selectOption(this, 'filterExp', 'new')">Tiêu chuẩn (Dưới 3 năm)</div>
+                                    <div class="dropdown-item" onclick="selectOption(this, 'filterExp', 'pro')">Chuyên gia (Trên 3 năm)</div>
+                                </div>
+                                <input type="hidden" id="filterExp" value="all">
+                            </div>
+                        </div>
+
+                        <button class="btn-hyper" style="border-radius: 12px; padding: 15px 30px;" onclick="filterMaids()">LỌC KẾT QUẢ</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container reveal-up">
+            <div class="list-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="font-size: 28px; font-weight: 900; margin:0; color: #1f2937;">Kết Quả Đề Xuất</h2>
+                <span class="result-count" style="font-weight:bold; color:#4E9F3D; background: white; padding: 8px 15px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    Hiển thị <b id="maidCount">0</b> hồ sơ
+                </span>
+            </div>
+            <div class="maid-grid" id="maid-list-container"></div>
+        </div>
+    </div>
+
+    <div id="booking-confirm" class="split-modal">
+        <div class="split-box" style="border-radius: 30px;">
+            <span class="sb-close" onclick="closeBooking()">&times;</span>
+            <div class="sb-left" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                <div>
+                    <img src="" id="sbAvatar" class="sb-avatar" style="border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h2 class="sb-name" id="sbName" style="color: #1f2937; font-weight: 900;">Tên Nhân Viên</h2>
+                    <p class="sb-sub" id="sbMeta" style="color: #2e7d32; font-weight: 800;">Thông tin</p>
+                    <div style="background: rgba(255, 255, 255, 0.6); padding: 15px; border-radius: 15px; font-size: 13px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.8); color: #333; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                        <i class="fas fa-shield-alt" style="color: #4E9F3D;"></i> Đã xác minh nhân thân & Đào tạo chuyên môn.
+                    </div>
+                </div>
+        
+                <div class="sb-total-box" style="background: rgba(255, 255, 255, 0.7); border-radius: 20px; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                    <p style="color: #555; font-weight: 800;">TỔNG CHI PHÍ ƯỚC TÍNH</p>
+                    <h2><span id="bkTotal" style="color: #e91e63; font-weight: 900;">0</span> <small style="font-size:16px; color: #1f2937; font-weight: bold;">VNĐ</small></h2>
+                </div>
+            </div>
+            <div class="sb-right" style="background: white;">
+                <h3 class="sb-title" style="color: #1f2937; font-weight: 900;">Thiết Lập Cuộc Hẹn</h3>
+                <div class="form-row">
+                    <label style="font-weight: 800;">Địa chỉ làm việc</label>
+                    <textarea id="bkAddress" placeholder="Nhập chi tiết..." class="form-input-elite" rows="2" style="border-radius: 12px; background: #f9f9f9;"></textarea>
+                </div>
+                <div style="display:flex; gap:15px;">
+                    <div class="form-row" style="flex:1;">
+                        <label style="font-weight: 800;">Ngày làm việc</label>
+                        <input type="date" id="bkDate" class="form-input-elite" style="border-radius: 12px; background: #f9f9f9;">
+                    </div>
+                    <div class="form-row" style="flex:1;">
+                        <label style="font-weight: 800;">Giờ bắt đầu</label>
+                        <input type="time" id="bkStartTime" class="form-input-elite" onchange="calculateTotal()" style="border-radius: 12px; background: #f9f9f9;">
+                    </div>
+                </div>
+                <div style="display:flex; gap:15px;">
+                    <div class="form-row" style="flex:1;">
+                        <label style="font-weight: 800;">Thời lượng (Tiếng)</label>
+                        <input type="number" id="bkDuration" min="1" max="24" placeholder="Ví dụ: 3" class="form-input-elite" oninput="calculateTotal()" style="border-radius: 12px; background: #f9f9f9;">
+                    </div>
+                    <div class="form-row" style="flex:1;">
+                        <label style="font-weight: 800;">Gói dịch vụ</label>
+                        <select id="bkService" class="form-input-elite" onchange="calculateTotal()" style="border-radius: 12px; background: #f9f9f9;">
+                            <option value="60000">Dọn dẹp cơ bản (60k/h)</option>
+                            <option value="80000">Nấu ăn gia đình (80k/h)</option>
+                            <option value="90000">Bảo mẫu / Trông trẻ (90k/h)</option>
+                            <option value="120000">Bảo trì & Máy lạnh (120k/h)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label style="font-weight: 800;">Số điện thoại liên hệ</label>
+                    <input type="text" id="bkPhoneReal" placeholder="Nhập số điện thoại..." class="form-input-elite" style="border-radius: 12px; background: #f9f9f9;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn-hyper" style="flex: 2; padding: 15px;" onclick="confirmBookingReal()">GỬI YÊU CẦU</button>
+                    <button class="btn-hyper" style="flex: 1; padding: 15px; background: #ff4757;" onclick="closeBooking()">HỦY</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="chat-btn glass-panel" onclick="toggleChat()" style="background: rgba(78, 159, 61, 0.85); border: 2px solid rgba(255,255,255,0.5);"><i class="fas fa-comment-dots"></i></div>
+    <div class="chat-window" id="chatWindow" style="border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid #eee;">
+        <div class="chat-header" style="background: #1f2937;">
+            <span style="font-weight: 800;">Trợ Lý Ảo Green House</span><span onclick="toggleChat()" style="cursor:pointer; font-size: 20px;">×</span>
+        </div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-footer">
+            <input id="chatInput" placeholder="Nhập tin nhắn..." onkeypress="handleChat(event)" style="flex:1; padding: 12px 15px; border-radius: 50px; border: 1px solid #ddd; outline: none; background: #f9f9f9; font-weight: 600;">
+            <button onclick="sendChat()" style="background:#4E9F3D; color:white; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; margin-left: 10px; box-shadow: 0 5px 15px rgba(78, 159, 61, 0.3);">➤</button>
+        </div>
+    </div>
+    <div id="maidDetailModal" class="modal">
+        <div class="modal-content" style="width: 900px; max-width: 95%; border-radius: 24px; padding: 35px; overflow-y: auto; max-height: 90vh;">
+            <span class="close-modal" onclick="closeModal('maidDetailModal')" style="position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; z-index: 10;">×</span>
+            <div id="maidDetailBody"></div>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
