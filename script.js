@@ -318,18 +318,35 @@ window.xuLyGuiOTPForgotEmail = async function (e) {
 window.xacNhanOTPForgotEmail = async function () {
     const code = document.getElementById('forgotOtpCode').value.trim();
     const newPass = document.getElementById('forgotNewPass').value;
+    const btnSubmit = document.querySelector('#forgotOtpSection .btn-submit');
 
     if (code !== generatedOTP_Forgot) return showToast("Mã OTP không đúng!", "error");
     if (newPass.length < 6) return showToast("Mật khẩu mới ít nhất 6 ký tự!", "error");
 
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = "ĐANG XỬ LÝ...";
+
     try {
-        // Gọi API Backend để cập nhật mật khẩu an toàn
-        // *Lưu ý: Bạn cần cấu hình endpoint /update-password ở backend trong tương lai
-        await db.collection('users').doc(userPhone_Forgot).update({ pass: newPass });
-        showToast('Đổi mật khẩu thành công!', 'success');
-        setTimeout(() => { location.reload(); }, 1500);
+        // GỌI API BACKEND THAY VÌ FIREBASE
+        const response = await fetch(`${API_URL}/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: userPhone_Forgot, newPassword: newPass })
+        });
+
+        if (response.ok) {
+            showToast('Đổi mật khẩu thành công!', 'success');
+            setTimeout(() => { location.reload(); }, 1500);
+        } else {
+            const data = await response.json();
+            showToast(data.message || "Lỗi khi cập nhật mật khẩu!", "error");
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<i class="fas fa-key"></i> ĐỔI MẬT KHẨU MỚI';
+        }
     } catch (error) {
-        showToast("Lỗi khi cập nhật mật khẩu!", "error");
+        showToast("Lỗi kết nối đến máy chủ!", "error");
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="fas fa-key"></i> ĐỔI MẬT KHẨU MỚI';
     }
 };
 
@@ -430,7 +447,7 @@ window.openServicePayment = function (orderId) {
                     <h2 style="color:#2e7d32; margin-top:0;"><i class="fas fa-qrcode"></i> Thanh Toán Dịch Vụ</h2>
                     <p style="color:#666; font-size:14px; margin-bottom:10px;">Mã đơn: <b style="color:#000;">#${order.id}</b></p>
                     <div style="background:#f8f9fa; padding:20px; border-radius:15px; margin-bottom:15px; border:1px dashed #4CAF50;">
-                        <img src="${MY_BANK_QR}" style="width:180px; height:180px; border-radius:10px; margin-bottom:15px; object-fit:cover; border:2px solid #eee;">
+                        <img loading="lazy" src="${MY_BANK_QR}" style="width:180px; height:180px; border-radius:10px; margin-bottom:15px; object-fit:cover; border:2px solid #eee;">
                         <h3 style="margin:0; color:#e91e63; font-size:26px;">${parseInt(order.total).toLocaleString()} VNĐ</h3>
                         <p style="margin:5px 0 0; font-size:13px; color:#555;">Nội dung CK: <b style="color:#000;">${order.id}</b></p>
                     </div>
@@ -732,8 +749,12 @@ window.renderOrders = function () {
     
     db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
         tb.innerHTML = '';
+        let ordersArray = []; // TẠO MẢNG ĐỂ GOM DỮ LIỆU CHO BIỂU ĐỒ
+        
         snapshot.forEach((doc) => {
             let o = doc.data();
+            ordersArray.push(o); // Đẩy từng đơn hàng vào mảng
+            
             let info = o.customerInfo || {};
             let addr = info.address ? `<br><small>📍 ${info.address}</small>` : '';
             let actionBtn = '';
@@ -769,9 +790,13 @@ window.renderOrders = function () {
                     <td>${actionBtn}</td>
                 </tr>`;
         });
+
+        // GỌI HÀM VẼ BIỂU ĐỒ VÀ TRUYỀN MẢNG VÀO (Đặt ở cuối vòng lặp)
+        if (typeof veBieuDoThongKe === 'function') {
+            veBieuDoThongKe(ordersArray);
+        }
     });
 }
-
 window.approveBookingToPayment = function (orderId) {
     if (!db) return;
     if (typeof Swal !== 'undefined') {
@@ -813,7 +838,7 @@ window.renderProductsAdmin = async function () {
         products.forEach(p => {
             tb.innerHTML += `
                 <tr>
-                    <td><img src="${p.anh}" height="40" style="object-fit:cover; border-radius:5px;"></td>
+                    <td><img loading="lazy" src="${p.anh}" height="40" style="object-fit:cover; border-radius:5px;"></td>
                     <td>${p.ten}</td>
                     <td>${parseInt(p.gia).toLocaleString()}</td>
                     <td>
@@ -939,7 +964,7 @@ window.renderMaidsAdmin = function () {
             let statusText = (m.IsAvailable === false) ? '<span style="color:red;font-weight:bold">(Bận)</span>' : '<span style="color:green;font-weight:bold">(Rảnh)</span>';
             tb.innerHTML += `
                 <tr>
-                    <td><img src="${m.ImageUrl || m.img}" height="40" style="border-radius:50%; object-fit:cover"></td>
+                    <td><img loading="lazy" src="${m.ImageUrl || m.img}" height="40" style="border-radius:50%; object-fit:cover"></td>
                     <td>${m.Name || m.name} ${statusText}<br><small>${m.Age || m.age}t - ${m.Home || m.hometown}</small></td>
                     <td>${m.Experience || m.exp}</td>
                     <td>
@@ -1194,7 +1219,7 @@ window.showMaidDetail = async function (id) {
         let detailHTML = `
             <div style="display:flex; gap:35px; flex-wrap:wrap; align-items: stretch;">
                 <div style="flex:1; min-width:300px; position: relative;">
-                    <img src="${m.ImageUrl || m.img}" style="width:100%; height:100%; min-height: 420px; object-fit:cover; border-radius:20px; box-shadow: 0 15px 35px rgba(0,0,0,0.15);">
+                    <img loading="lazy" src="${m.ImageUrl || m.img}" style="width:100%; height:100%; min-height: 420px; object-fit:cover; border-radius:20px; box-shadow: 0 15px 35px rgba(0,0,0,0.15);">
                     <div style="position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); padding: 6px 15px; border-radius: 15px; font-weight: 900; color: #f39c12; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
                         <i class="fas fa-star"></i> 5.0
                     </div>
@@ -1296,7 +1321,7 @@ window.renderMaidListPro = function(filterSkill = 'all', filterExp = 'all') {
             let queQuan = m.Home || m.hometown || 'Chưa cập nhật'; 
             let skillsArray = m.Skills || m.skills || []; if(typeof skillsArray === 'string') skillsArray = skillsArray.split(','); let skillsHtml = skillsArray.map(s => `<span class="elite-tag">${s.trim()}</span>`).join(''); 
             
-            container.innerHTML += `<div class="elite-card" onclick="showMaidDetail('${m.Id || m.id}')"><img src="${m.ImageUrl || m.img}" class="elite-avatar">${statusBadge}<div class="elite-overlay"><h3 class="elite-name">${m.Name || m.name}</h3><p class="elite-info"><i class="fas fa-map-marker-alt"></i> ${m.Age || m.age || '?'} tuổi • ${queQuan}</p>
+            container.innerHTML += `<div class="elite-card" onclick="showMaidDetail('${m.Id || m.id}')"><img loading="lazy" src="${m.ImageUrl || m.img}" class="elite-avatar">${statusBadge}<div class="elite-overlay"><h3 class="elite-name">${m.Name || m.name}</h3><p class="elite-info"><i class="fas fa-map-marker-alt"></i> ${m.Age || m.age || '?'} tuổi • ${queQuan}</p>
             <div class="elite-rating">★ ${m.rating || '5.0'} <span style="color:#c8e6c9; font-size:12px; font-weight:normal;">(${m.reviewCount || 0} đánh giá)</span></div><div class="elite-tags">${skillsHtml}</div>${actionBtn}</div></div>`; 
         }); 
     });
@@ -1315,7 +1340,7 @@ window.renderAllProducts = async function () {
         products.forEach(sp => {
             grid.innerHTML += `
                 <div class="card shop-card" onclick="showProductDetail('${sp.id}')">
-                    <img src="${sp.anh}" class="card-img">
+                    <img loading="lazy" src="${sp.anh}" class="card-img">
                     <div class="card-content">
                         <h4 style="margin:0 0 10px; font-size:18px; color:#333;">${sp.ten}</h4>
                         <div style="font-weight:bold; color:#e91e63; margin-bottom:15px; font-size:18px;">${parseInt(sp.gia).toLocaleString()} đ</div>
@@ -1571,7 +1596,7 @@ window.showProductDetail = async function (id) {
     let albumHtml = '';
     if (p.album && p.album.length > 0) {
         p.album.forEach(link => {
-            albumHtml += `<img src="${link}" class="pd-thumb" onclick="changeMainImg(this, '${link}')">`;
+            albumHtml += `<img loading="lazy" src="${link}" class="pd-thumb" onclick="changeMainImg(this, '${link}')">`;
         });
     }
     
@@ -1580,9 +1605,9 @@ window.showProductDetail = async function (id) {
             <div class="modal-content modal-lg" style="width: 850px; max-width: 95%; display: flex; gap: 30px; flex-wrap: wrap;">
                 <span class="close-modal" onclick="closeDiag('productDetailModal')">×</span>
                 <div class="pd-images" style="flex: 1; min-width: 300px;">
-                    <img src="${p.anh}" class="pd-main-img" id="main-pd-img" style="width:100%; height:350px; object-fit:cover; border-radius:10px;">
+                    <img loading="lazy" src="${p.anh}" class="pd-main-img" id="main-pd-img" style="width:100%; height:350px; object-fit:cover; border-radius:10px;">
                     <div class="pd-gallery" style="display:flex; gap:10px; overflow-x:auto; margin-top:10px;">
-                        <img src="${p.anh}" class="pd-thumb active" onclick="changeMainImg(this, '${p.anh}')">
+                        <img loading="lazy" src="${p.anh}" class="pd-thumb active" onclick="changeMainImg(this, '${p.anh}')">
                         ${albumHtml}
                     </div>
                 </div>
@@ -1678,7 +1703,7 @@ function renderCart() {
         listArea.innerHTML += `
             <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f5f5f5;">
                 <div style="width: 30px;"><input type="checkbox" ${item.selected ? 'checked' : ''} onclick="toggleCartItem(${index})" style="width:16px;height:16px;"></div>
-                <div style="width: 60px;"><img src="${item.anh}" style="width:45px; height:45px; object-fit:cover; border-radius:5px;"></div>
+                <div style="width: 60px;"><img loading="lazy" src="${item.anh}" style="width:45px; height:45px; object-fit:cover; border-radius:5px;"></div>
                 <div style="flex: 1; font-weight:bold; font-size:14px; color:#333;">${item.ten}<br><small style="color:#e91e63">${item.gia.toLocaleString()} đ</small></div>
                 <div style="width: 100px; display: flex; align-items: center; justify-content:center; background:#f5f5f5; border-radius:20px; padding:2px;">
                     <button type="button" onclick="updateCartQty(${index}, -1)" style="border:none; background:none; cursor:pointer; font-weight:bold; padding:2px 10px;">-</button>
@@ -1757,7 +1782,7 @@ window.renderCheckoutItems = function () {
         html += `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding-bottom:8px; border-bottom:1px dashed #ddd;">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <img src="${item.anh}" style="width:40px; height:40px; border-radius:5px; object-fit:cover;">
+                    <img loading="lazy" src="${item.anh}" style="width:40px; height:40px; border-radius:5px; object-fit:cover;">
                     <div>
                         <div style="font-weight:bold; font-size:14px;">${item.ten}</div>
                         <div style="color:#e91e63; font-size:13px;">${item.gia.toLocaleString()} đ</div>
@@ -1945,7 +1970,7 @@ window.renderHomeMaids = function() {
             
             container.innerHTML += `
                 <div class="elite-card" onclick="window.location.href='booking.html'">
-                    <img src="${m.ImageUrl || m.img}" class="elite-avatar">
+                    <img loading="lazy" src="${m.ImageUrl || m.img}" class="elite-avatar">
                     <div class="elite-overlay">
                         <h3 class="elite-name">${m.Name || m.name}</h3>
                         <p class="elite-info"><i class="fas fa-map-marker-alt"></i> ${m.Age || m.age} tuổi • ${queQuan}</p>
@@ -1972,7 +1997,7 @@ window.renderHomeProducts = function() {
             let sp = doc.data();
             grid.innerHTML += `
                 <div class="card shop-card" onclick="showProductDetail('${sp.id}')">
-                    <img src="${sp.anh}" class="card-img">
+                    <img loading="lazy" src="${sp.anh}" class="card-img">
                     <div class="card-content">
                         <h4 style="margin:0 0 10px; font-size:18px; color:#333;">${sp.ten}</h4>
                         <div style="font-weight:bold; color:#e91e63; margin-bottom:15px; font-size:18px;">${parseInt(sp.gia).toLocaleString()} đ</div>
@@ -2250,3 +2275,64 @@ window.submitMaidReview = async function() {
         showToast("Lỗi hệ thống khi gửi đánh giá!", "error");
     }
 };
+// ==========================================================================
+// THỐNG KÊ BIỂU ĐỒ ADMIN (CHART.JS)
+// ==========================================================================
+let myRevenueChart = null;
+let myStatusChart = null;
+
+window.veBieuDoThongKe = function(orders) {
+    // 1. Phân loại dữ liệu
+    let tongDoanhThu = 0;
+    let choDuyet = 0, choThanhToan = 0, hoanThanh = 0;
+
+    orders.forEach(o => {
+        if (o.status === 'done' || o.status === 'confirmed') {
+            tongDoanhThu += parseInt(o.total || 0);
+            hoanThanh++;
+        } else if (o.status === 'awaiting_payment') {
+            choThanhToan++;
+        } else {
+            choDuyet++;
+        }
+    });
+
+    // 2. Xóa biểu đồ cũ (nếu có) để không bị lỗi xếp chồng khi reload
+    if (myRevenueChart) myRevenueChart.destroy();
+    if (myStatusChart) myStatusChart.destroy();
+
+    // 3. Vẽ Biểu đồ Tròn (Tỷ lệ trạng thái đơn)
+    const ctxStatus = document.getElementById('statusChart');
+    if (ctxStatus) {
+        myStatusChart = new Chart(ctxStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['Chờ duyệt/Giao', 'Chờ Thanh Toán', 'Hoàn Thành'],
+                datasets: [{
+                    data: [choDuyet, choThanhToan, hoanThanh],
+                    backgroundColor: ['#f39c12', '#e74c3c', '#2ecc71'],
+                    borderWidth: 0
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+    }
+
+    // 4. Vẽ Biểu đồ Cột (Doanh thu)
+    const ctxRev = document.getElementById('revenueChart');
+    if (ctxRev) {
+        myRevenueChart = new Chart(ctxRev, {
+            type: 'bar',
+            data: {
+                labels: ['Tổng Doanh Thu Tích Lũy'],
+                datasets: [{
+                    label: 'VNĐ',
+                    data: [tongDoanhThu],
+                    backgroundColor: '#4E9F3D',
+                    borderRadius: 8
+                }]
+            },
+            options: { scales: { y: { beginAtZero: true } } }
+        });
+    }
+}
