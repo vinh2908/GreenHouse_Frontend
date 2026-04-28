@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cửa Hàng Store - Green House</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animation.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
-
 <body>
     <div id="toast-container"></div>
     <div id="authModal" class="modal"></div>
@@ -42,7 +45,6 @@
                 </div>
             </div>
         </section>
-
         <div class="container reveal-up">
             <div class="grid-3" id="shop-product-grid">
                 <p style="text-align:center; width: 100%; color: #999;">Đang kết nối kho hàng...</p>
@@ -116,9 +118,18 @@
             <button onclick="sendChat()" style="background:#4E9F3D; color:white; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; margin-left: 10px; box-shadow: 0 5px 15px rgba(78, 159, 61, 0.3);">➤</button>
         </div>
     </div>
-
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="script.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/shop.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/init.js"></script>
 </body>
 </html>

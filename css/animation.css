@@ -1,0 +1,37 @@
+@keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-700px) scale(1.2); opacity: 0; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes gradientFlow { to { background-position: 200% center; } }
+@keyframes revealAnim { to { opacity: 1; transform: translateY(0); } }
+@keyframes floatSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+@keyframes floatFast { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(15px); } }
+@keyframes slideUpFast { 0% { opacity: 0; transform: translateY(40px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes floatUpDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+@keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); transform: scale(1); } 70% { box-shadow: 0 0 0 15px rgba(76, 175, 80, 0); transform: scale(1.02); } 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); transform: scale(1); } }
+@keyframes shimmerText { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+@keyframes sweepShine { 100% { left: 125%; } }
+@keyframes spinSlow { 100% { transform: rotate(360deg); } }
+@keyframes spin3D { 100% { transform: rotateY(360deg); } }
+@keyframes shakeIcon { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px) rotate(-5deg); } 75% { transform: translateX(3px) rotate(5deg); } }
+@keyframes marqueeMove { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes bounceIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes popIn { 0% { transform: scale(0); opacity: 0; } 80% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes driftShape { 0% { transform: translate(0,0) rotate(0deg); } 100% { transform: translate(30px, 50px) rotate(45deg); } }
+@keyframes flyAway { 0% { transform: translate(0,0); opacity:1; } 100% { transform: translate(20px, -20px); opacity:0; } }
+@keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.reveal-up { opacity: 0; transform: translateY(40px); animation: revealAnim 1s forwards cubic-bezier(0.2, 0.8, 0.2, 1); }
+.stagger-1 { animation-delay: 0.1s; } .stagger-2 { animation-delay: 0.2s; } .stagger-3 { animation-delay: 0.3s; }
+.slide-up-fast { opacity: 0; animation: slideUpFast 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.float-up-down { animation: floatUpDown 4s ease-in-out infinite; }
+.pulse-infinite { animation: pulseGlow 2s infinite; }
+.spin-slow { animation: spinSlow 10s linear infinite; }
+.spin-3d { display: inline-block; animation: spin3D 3s linear infinite; }
+.shake-icon { display: inline-block; animation: shakeIcon 2s ease-in-out infinite; }
+.bounce-icon { display: inline-block; animation: bounceIcon 2s infinite; }
+.pop-in { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards; }
+.delay-1 { animation-delay: 0.2s !important; } .delay-2 { animation-delay: 0.4s !important; }
+.hover-lift { transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.hover-lift:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.shimmer-text-green { background: linear-gradient(90deg, #1f2937 0%, #4CAF50 50%, #1f2937 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shimmerText 3s linear infinite; }

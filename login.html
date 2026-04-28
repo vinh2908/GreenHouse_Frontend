@@ -6,131 +6,73 @@
     <title>SignIn & SignUp - Green House</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animation.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
-
 <body class="login-body">
-
     <div class="auth-container">
         <a href="index.html" class="login-logo"><i class="fas fa-home"></i> GREEN HOUSE</a>
-
         <div id="error-msg"></div>
-
         <div class="auth-tabs">
             <div class="auth-tab active" id="tab-login" onclick="switchAuth('login')">Đăng Nhập</div>
             <div class="auth-tab" id="tab-register" onclick="switchAuth('register')">Đăng Ký</div>
         </div>
-
         <div id="recaptcha-container"></div>
-
         <div id="box-login" class="auth-box active">
     <form onsubmit="xuLyDangNhap(event)">
-        <div class="form-group">
-            <label>Tài khoản (SĐT hoặc Email):</label>
-            <input type="text" id="username" placeholder="Nhập SĐT hoặc Email của bạn..." required>
-        </div>
-        <div class="form-group">
-            <label>Mật khẩu:</label>
-            <input type="password" id="password" placeholder="Nhập mật khẩu..." required>
-        </div>
+        <div class="form-group"><label>Tài khoản (SĐT hoặc Email):</label><input type="text" id="username" placeholder="Nhập SĐT hoặc Email của bạn..." required></div>
+        <div class="form-group"><label>Mật khẩu:</label><input type="password" id="password" placeholder="Nhập mật khẩu..." required></div>
         <button type="submit" class="btn-submit"><i class="fas fa-sign-in-alt"></i> ĐĂNG NHẬP</button>
     </form>
     <a href="#" onclick="switchAuth('forgot')" style="display:block; text-align:right; font-size:13px; color:#4E9F3D; margin-top:15px; font-weight:bold; text-decoration:underline;">Quên mật khẩu?</a>
 </div>
-
         <div id="box-register" class="auth-box">
             <form id="registerForm" onsubmit="xuLyGuiOTPEmail(event)">
-                <div class="form-group">
-                    <label>Họ và Tên:</label>
-                    <input type="text" id="regName" placeholder="Nhập họ tên của bạn..." required>
-                </div>
-                
+                <div class="form-group"><label>Họ và Tên:</label><input type="text" id="regName" placeholder="Nhập họ tên của bạn..." required></div>
                 <div style="display: flex; gap: 10px;">
-                    <div class="form-group" style="flex: 1;">
-                        <label>Số điện thoại:</label>
-                        <input type="tel" id="regPhone" placeholder="SĐT đăng nhập..." required>
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>Email của bạn:</label>
-                        <input type="email" id="regEmail" placeholder="Ví dụ: vinh@gmail.com" required>
-                    </div>
+                    <div class="form-group" style="flex: 1;"><label>Số điện thoại:</label><input type="tel" id="regPhone" placeholder="SĐT đăng nhập..." required></div>
+                    <div class="form-group" style="flex: 1;"><label>Email của bạn:</label><input type="email" id="regEmail" placeholder="Ví dụ: vinh@gmail.com" required></div>
                 </div>
-
                 <div style="display: flex; gap: 10px;">
-                    <div class="form-group" style="flex: 1;">
-                        <label>Mật khẩu:</label>
-                        <input type="password" id="regPass" placeholder="Tạo mật khẩu..." required minlength="6">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>Xác nhận:</label>
-                        <input type="password" id="regPassConfirm" placeholder="Nhập lại..." required>
-                    </div>
+                    <div class="form-group" style="flex: 1;"><label>Mật khẩu:</label><input type="password" id="regPass" placeholder="Tạo mật khẩu..." required minlength="6"></div>
+                    <div class="form-group" style="flex: 1;"><label>Xác nhận:</label><input type="password" id="regPassConfirm" placeholder="Nhập lại..." required></div>
                 </div>
                 <button type="submit" id="btnSendOTPEmail" class="btn-submit"><i class="fas fa-envelope"></i> GỬI MÃ OTP VÀO EMAIL</button>
             </form>
-
             <div id="otpSection" style="display: none; margin-top: 20px; border-top: 1px dashed #ddd; padding-top: 20px;">
-                <p style="color: #4E9F3D; font-weight: bold; font-size: 14px; margin-bottom: 10px;">
-                    <i class="fas fa-check-circle"></i> Đã gửi mã OTP 6 số đến Email của bạn!
-                </p>
-                <div class="form-group">
-                    <input type="number" id="otpCode" placeholder="Nhập 6 số OTP..." style="text-align: center; font-size: 18px; letter-spacing: 5px; font-weight: bold;">
-                </div>
-                <button type="button" onclick="xacNhanOTPEmail()" class="btn-submit" style="background: #e91e63;">
-                    <i class="fas fa-user-check"></i> XÁC NHẬN & TẠO TÀI KHOẢN
-                </button>
+                <p style="color: #4E9F3D; font-weight: bold; font-size: 14px; margin-bottom: 10px;"><i class="fas fa-check-circle"></i> Đã gửi mã OTP 6 số đến Email của bạn!</p>
+                <div class="form-group"><input type="number" id="otpCode" placeholder="Nhập 6 số OTP..." style="text-align: center; font-size: 18px; letter-spacing: 5px; font-weight: bold;"></div>
+                <button type="button" onclick="xacNhanOTPEmail()" class="btn-submit" style="background: #e91e63;"><i class="fas fa-user-check"></i> XÁC NHẬN & TẠO TÀI KHOẢN</button>
             </div>
         </div>
-
         <div id="box-forgot" class="auth-box">
     <form id="forgotForm" onsubmit="xuLyGuiOTPForgotEmail(event)">
-        <div class="form-group">
-            <label>Nhập Email đã đăng ký để nhận mã:</label>
-            <input type="email" id="forgotEmail" placeholder="Ví dụ: vinh@gmail.com" required>
-        </div>
-        <button type="submit" id="btnSendOTPForgot" class="btn-submit">
-            <i class="fas fa-envelope"></i> GỬI MÃ KHÔI PHỤC VÀO EMAIL
-        </button>
-        <a href="#" onclick="switchAuth('login')" class="back-home" style="margin-top:15px; display:block;">
-            ← Quay lại đăng nhập
-        </a>
+        <div class="form-group"><label>Nhập Email đã đăng ký để nhận mã:</label><input type="email" id="forgotEmail" placeholder="Ví dụ: vinh@gmail.com" required></div>
+        <button type="submit" id="btnSendOTPForgot" class="btn-submit"><i class="fas fa-envelope"></i> GỬI MÃ KHÔI PHỤC VÀO EMAIL</button>
+        <a href="#" onclick="switchAuth('login')" class="back-home" style="margin-top:15px; display:block;">← Quay lại đăng nhập</a>
     </form>
-
     <div id="forgotOtpSection" style="display: none; margin-top: 15px; border-top: 1px dashed #ddd; padding-top: 15px;">
-        <p style="color: #4E9F3D; font-weight: bold; font-size: 13px; margin-bottom: 10px;">
-            <i class="fas fa-check-circle"></i> Đã gửi mã OTP vào Email!
-        </p>
-        <div class="form-group">
-            <input type="number" id="forgotOtpCode" placeholder="Nhập 6 số OTP..." 
-                   style="text-align: center; font-size: 18px; letter-spacing: 5px; font-weight: bold;">
-        </div>
-        <div class="form-group">
-            <label>Mật khẩu mới:</label>
-            <input type="password" id="forgotNewPass" placeholder="Tạo mật khẩu mới..." required minlength="6">
-        </div>
-        <button type="button" onclick="xacNhanOTPForgotEmail()" class="btn-submit" style="background: #e91e63;">
-            <i class="fas fa-key"></i> ĐỔI MẬT KHẨU MỚI
-        </button>
+        <p style="color: #4E9F3D; font-weight: bold; font-size: 13px; margin-bottom: 10px;"><i class="fas fa-check-circle"></i> Đã gửi mã OTP vào Email!</p>
+        <div class="form-group"><input type="number" id="forgotOtpCode" placeholder="Nhập 6 số OTP..." style="text-align: center; font-size: 18px; letter-spacing: 5px; font-weight: bold;"></div>
+        <div class="form-group"><label>Mật khẩu mới:</label><input type="password" id="forgotNewPass" placeholder="Tạo mật khẩu mới..." required minlength="6"></div>
+        <button type="button" onclick="xacNhanOTPForgotEmail()" class="btn-submit" style="background: #e91e63;"><i class="fas fa-key"></i> ĐỔI MẬT KHẨU MỚI</button>
     </div>
 </div>
-
         <a href="index.html" class="back-home">← Quay về Trang chủ</a>
     </div>
-
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() {
-            // THAY MÃ NÀY BẰNG PUBLIC KEY THẬT TRONG EMAILJS > ACCOUNT
-            emailjs.init("gW8N_RVoJwWHK81Cs"); 
-        })();
-    </script>
-
+    <script type="text/javascript"> (function() { emailjs.init("gW8N_RVoJwWHK81Cs"); })(); </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-
-    <script src="script.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/init.js"></script>
 </body>
 </html>

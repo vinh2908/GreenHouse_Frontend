@@ -1,0 +1,18 @@
+body.login-body { background: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+.auth-container { background: white; width: 400px; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); text-align: center; position: relative; overflow: hidden; }
+.login-logo { font-size: 28px; font-weight: 800; color: #4E9F3D; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; gap: 10px; text-decoration: none; }
+.auth-tabs { display: flex; margin-bottom: 25px; border-bottom: 2px solid #eee; }
+.auth-tab { flex: 1; padding: 12px; cursor: pointer; font-weight: bold; color: #888; transition: 0.3s; font-size: 16px; }
+.auth-tab:hover { color: #4E9F3D; }
+.auth-tab.active { color: #4E9F3D; border-bottom: 3px solid #4E9F3D; }
+.auth-box { display: none; animation: fadeIn 0.4s ease-in-out; }
+.auth-box.active { display: block; }
+.form-group { margin-bottom: 18px; text-align: left; }
+.form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; font-size: 14px; }
+.form-group input, .form-group textarea { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; font-size: 14px; transition: 0.3s; }
+.form-group input:focus, .form-group textarea:focus { border-color: #4E9F3D; outline: none; box-shadow: 0 0 0 3px rgba(78, 159, 61, 0.1); }
+.btn-submit { width: 100%; padding: 14px; background: #4E9F3D; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+.btn-submit:hover { background: #3d8031; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(78, 159, 61, 0.3); }
+#error-msg { color: #e74c3c; font-size: 13px; font-weight: bold; margin-bottom: 15px; display: none; text-align: left; background: #fdf2f2; padding: 10px; border-radius: 5px; border-left: 4px solid #e74c3c; }
+.back-home { margin-top: 20px; display: inline-block; font-size: 14px; color: #888; font-weight: 600; text-decoration: none; }
+.back-home:hover { color: #4E9F3D; }

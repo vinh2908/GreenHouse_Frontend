@@ -1,0 +1,9 @@
+header { background: white; padding: 10px 40px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); }
+.top-bar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+.logo { font-size: 24px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+.main-nav { display: flex; justify-content: center; gap: 40px; padding-top: 15px; font-weight: 600; }
+.main-nav a:hover, .main-nav a.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+.user-actions { display: flex; gap: 15px; align-items: center; }
+.icon-btn { position: relative; cursor: pointer; font-size: 20px; color: #555; }
+.badge { position: absolute; top: -5px; right: -8px; background: var(--red); color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }

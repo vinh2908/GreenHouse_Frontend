@@ -1,0 +1,30 @@
+#admin-content { max-width: 1200px; margin: 0 auto; display: block; }
+.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.btn-home { background: #2c3e50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; }
+.btn-reset { background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; }
+.tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+.tabs .tab-btn { padding: 12px 25px; background: #ddd; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; color: #555; transition: 0.3s; }
+.tabs .tab-btn.active { background: #4E9F3D; color: white; }
+.panel { background: white; padding: 20px; border-radius: 15px; display: none; }
+.panel.active { display: block; }
+#admin-content table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+#admin-content th { background: #f8f9fa; color: #2c3e50; padding: 15px; text-align: left; }
+#admin-content td { padding: 15px; border-bottom: 1px solid #eee; }
+.btn-action { background: #4E9F3D; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+.btn-edit { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-right: 5px; }
+.btn-del { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; background: #f9f9f9; padding: 20px; border-radius: 10px; }
+.form-grid input, .form-grid textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+.upload-row { display: flex; gap: 5px; }
+.upload-row label { background: #ddd; padding: 10px; cursor: pointer; border-radius: 5px; }
+.order-row { border: 1px solid #eee; padding: 10px; margin-bottom: 10px; border-radius: 8px; background: #fafafa; }
+.admin-chat-widget { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #0984e3; border-radius: 50%; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3); z-index: 9999; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; }
+.admin-chat-widget.expanded { width: 700px; height: 500px; border-radius: 15px; flex-direction: column; cursor: default; align-items: stretch; justify-content: flex-start; overflow: hidden; background: white; border: 1px solid #ddd; padding: 0; }
+.chat-layout { display: none; height: 100%; }
+.expanded .chat-layout { display: flex; }
+.expanded i.fa-comments { display: none; }
+.chat-sidebar { width: 250px !important; background: #f1f5f9 !important; border-right: 2px solid #cbd5e1 !important; overflow-y: auto; display: flex; flex-direction: column; }
+.chat-user-item { padding: 15px; border-bottom: 1px solid #e2e8f0 !important; transition: 0.2s; cursor: pointer; }
+.chat-user-item:hover { background: #e2e8f0 !important; }
+.chat-user-item.active { background: #ffffff !important; border-left: 4px solid #0984e3 !important; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.chat-main { flex: 1; display: flex; flex-direction: column; background: white; }

@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Dịch Vụ Giúp Việc - Green House</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animation.css">
+    <link rel="stylesheet" href="css/booking.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
-
 <body>
-
     <div id="toast-container"></div>
     <div id="authModal" class="modal"></div>
 
@@ -154,7 +156,7 @@
             </div>
         </div>
     </div>
-<div class="chat-btn glass-panel" onclick="toggleChat()" style="background: rgba(78, 159, 61, 0.85); border: 2px solid rgba(255,255,255,0.5);"><i class="fas fa-comment-dots"></i></div>
+    <div class="chat-btn glass-panel" onclick="toggleChat()" style="background: rgba(78, 159, 61, 0.85); border: 2px solid rgba(255,255,255,0.5);"><i class="fas fa-comment-dots"></i></div>
     <div class="chat-window" id="chatWindow" style="border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid #eee;">
         <div class="chat-header" style="background: #1f2937;">
             <span style="font-weight: 800;">Trợ Lý Ảo Green House</span><span onclick="toggleChat()" style="cursor:pointer; font-size: 20px;">×</span>
@@ -173,6 +175,16 @@
     </div>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/init.js"></script>
 </body>
 </html>

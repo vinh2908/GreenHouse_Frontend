@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Green House - Chăm Sóc Gia Đình</title>
     <meta name="description" content="Green House - Nền tảng đặt lịch giúp việc và mua sắm vật tư vệ sinh thông minh hàng đầu. Nhanh chóng, uy tín, minh bạch.">
     <meta name="keywords" content="giúp việc, dọn nhà, bảo mẫu, vệ sinh, green house">
-    
     <meta property="og:title" content="Green House - Chăm Sóc Gia Đình">
     <meta property="og:description" content="Hệ sinh thái dịch vụ gia đình hàng đầu. Trao việc khó, nhận thảnh thơi!">
     <meta property="og:image" content="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80">
     <meta property="og:type" content="website">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animation.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/booking.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
-
 <body>
-
     <div id="toast-container"></div>
     <div id="authModal" class="modal"></div>
 
@@ -41,23 +44,17 @@
     </header>
 
     <div class="main-content">
-        
         <section>
             <div class="container hero-3d-container">
-                
                 <div class="hero-text-col reveal-up">
                     <div style="display: inline-flex; align-items: center; gap: 10px; background: white; padding: 8px 20px; border-radius: 50px; font-weight: 800; font-size: 14px; color: #1f2937; box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-bottom: 30px;">
                         <div style="width: 10px; height: 10px; background: #ff4757; border-radius: 50%; animation: pulseGreen 2s infinite;"></div>
                         Hệ thống điều phối tự động 24/7
                     </div>
-                    
-                    <h1 class="title-mask">
-                        Trao Việc Khó, <br><span class="text-neon">Nhận Thảnh Thơi.</span>
-                    </h1>
+                    <h1 class="title-mask">Trao Việc Khó, <br><span class="text-neon">Nhận Thảnh Thơi.</span></h1>
                     <p style="font-size: 18px; color: #555; max-width: 500px; line-height: 1.7; font-weight: 600;">
                         Chỉ với 1 thao tác chạm, hàng ngàn chuyên gia vệ sinh và đầu bếp đã được xác minh sẵn sàng phục vụ gia đình bạn.
                     </p>
-                    
                     <div class="floating-search">
                         <div style="background: #f4f9f5; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 5px;">
                             <i class="fas fa-search" style="color: #4E9F3D;"></i>
@@ -73,10 +70,8 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="hero-visual-col reveal-up stagger-1">
                     <img loading="lazy" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" class="img-main">
-                    
                     <div class="ui-card-1">
                         <i class="fas fa-shield-alt" style="font-size: 30px; color: #4E9F3D;"></i>
                         <div>
@@ -84,7 +79,6 @@
                             <div style="font-size: 12px; color: #666; font-weight: 600;">An toàn tài sản tuyệt đối</div>
                         </div>
                     </div>
-
                     <div class="ui-card-2">
                         <div style="font-size: 12px; color: #aaa; margin-bottom: 5px; font-weight: bold;">CẬP NHẬT TRỰC TIẾP</div>
                         <div style="display: flex; align-items: center; gap: 10px;">
@@ -96,7 +90,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -105,7 +98,6 @@
                 <div style="text-align: center; margin-bottom: 20px;" class="reveal-up">
                     <h2 style="font-size: 38px; font-weight: 900; color: #1f2937;">Đội Ngũ <span class="text-neon">Chuyên Nghiệp</span></h2>
                 </div>
-                
                 <div class="bento-grid-container reveal-up stagger-1">
                     <div class="bento-item bento-1" onclick="quickFilter('Dọn dẹp')">
                         <div class="bento-icon"><i class="fas fa-sparkles"></i></div>
@@ -113,7 +105,6 @@
                         <p class="bento-desc" style="font-size: 18px; max-width: 80%;">Công nghệ làm sạch sinh học kết hợp quy trình 5 bước. Đánh bay mọi vết bẩn cứng đầu chỉ trong 2 giờ làm việc.</p>
                         <i class="fas fa-arrow-right" style="position: absolute; bottom: 30px; right: 30px; font-size: 24px; color: #4E9F3D; background: white; padding: 15px; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,0.1);"></i>
                     </div>
-                    
                     <div class="bento-item bento-2" onclick="quickFilter('Nấu ăn')">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                             <div>
@@ -124,13 +115,11 @@
                             <img loading="lazy" src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=200&q=80" style="width: 100px; height: 100px; border-radius: 20px; object-fit: cover;">
                         </div>
                     </div>
-
                     <div class="bento-item bento-3" onclick="quickFilter('Trông trẻ')">
                         <div class="bento-icon"><i class="fas fa-baby-carriage"></i></div>
                         <h3 class="bento-title">Bảo Mẫu</h3>
                         <p class="bento-desc">Chuyên môn sư phạm.</p>
                     </div>
-
                     <div class="bento-item bento-4" onclick="window.location.href='shop.html'">
                         <div class="bento-icon" style="color: #f39c12;"><i class="fas fa-store"></i></div>
                         <h3 class="bento-title">Cửa Hàng</h3>
@@ -178,10 +167,8 @@
                     <div class="hero-text-col reveal-up">
                         <h2 style="font-size: 45px; font-weight: 900; color: #1f2937; margin-bottom: 20px;">Hãy Để Chúng Tôi <br><span class="text-neon">Lắng Nghe Bạn</span></h2>
                         <p style="font-size: 16px; color: #666; margin-bottom: 40px;">Mọi đánh giá đều được ghi nhận trực tiếp trên hệ thống Blockchain nội bộ, đảm bảo tính minh bạch 100%.</p>
-                        
                         <div style="background: #f4f9f5; padding: 30px; border-radius: 24px; border: 1px solid #e0e0e0;">
                             <input type="text" id="rvName" placeholder="Tên hiển thị..." style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; margin-bottom: 15px; font-family: inherit; font-weight: 600; box-sizing: border-box;">
-                            
                             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
                                 <span style="font-weight: 800; color: #333;">Trải nghiệm:</span>
                                 <div class="rating-stars" style="color: #ddd; font-size: 30px; cursor: pointer;">
@@ -193,20 +180,16 @@
                                     <input type="hidden" id="rvStar" value="5">
                                 </div>
                             </div>
-                            
                             <textarea id="rvContent" rows="3" placeholder="Chi tiết đánh giá..." style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; margin-bottom: 20px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
-                            
                             <button class="btn-hyper" style="width: 100%;" onclick="guiDanhGia()">GỬI ĐÁNH GIÁ</button>
                         </div>
                     </div>
-                    
                     <div class="hero-visual-col reveal-up stagger-1" style="height: auto;">
                         <div id="review-list" style="display: flex; flex-direction: column; gap: 20px;"></div>
                     </div>
                 </div>
             </div>
         </section>
-
     </div>
 
     <footer style="background: #1f2937; color: white; padding: 40px 20px; text-align: center;">
@@ -279,9 +262,18 @@
             <div id="maidDetailBody"></div>
         </div>
     </div>
-
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="script.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/shop.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/init.js"></script>
 </body>
 </html>
