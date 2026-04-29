@@ -1,4 +1,15 @@
 function loadAdminData() { renderOrders(); renderProductsAdmin(); renderMaidsAdmin(); loadChatUsers(); }
+function ensureAdminOperation() {
+    if (!currentUser || currentUser.role !== 'Admin') {
+        showToast("Admin session required.", "error");
+        return false;
+    }
+    if (!localStorage.getItem('token')) {
+        showToast("Missing admin token. Please log in again.", "error");
+        return false;
+    }
+    return true;
+}
 window.switchTab = function (t) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     if (t === 'orders') { document.querySelectorAll('.tab-btn')[0].classList.add('active'); document.getElementById('tab-orders').classList.add('active'); } 
@@ -24,6 +35,7 @@ window.renderOrders = function () {
     });
 }
 window.approveBookingToPayment = function (orderId) {
+    if (!ensureAdminOperation()) return;
     if (!db) return;
     if (typeof Swal !== 'undefined') {
         Swal.fire({ title: 'Duyệt đơn dịch vụ?', text: "Đơn sẽ chuyển sang trạng thái CHỜ KHÁCH THANH TOÁN.", icon: 'question', showCancelButton: true, confirmButtonColor: '#4CAF50', cancelButtonColor: '#e74c3c', confirmButtonText: 'Đồng ý duyệt', cancelButtonText: 'Hủy' }).then(async (result) => {
@@ -31,7 +43,7 @@ window.approveBookingToPayment = function (orderId) {
         });
     }
 }
-window.doneOrder = async function (orderId) { if (!db) return; await db.collection("orders").doc(orderId).update({ status: 'done', isPaid: true }); showToast('Đã cập nhật!', 'success'); }
+window.doneOrder = async function (orderId) { if (!ensureAdminOperation()) return; if (!db) return; await db.collection("orders").doc(orderId).update({ status: 'done', isPaid: true }); showToast('Đã cập nhật!', 'success'); }
 window.renderProductsAdmin = async function () {
     const tb = document.querySelector('#productTable tbody'); if (!tb) return;
     tb.innerHTML = '<tr><td colspan="4" style="text-align:center;">Đang tải dữ liệu...</td></tr>';
@@ -41,6 +53,7 @@ window.renderProductsAdmin = async function () {
     } catch (error) { tb.innerHTML = '<tr><td colspan="4">Lỗi kết nối API!</td></tr>'; }
 }
 window.saveProduct = async function () {
+    if (!ensureAdminOperation()) return;
     const id = document.getElementById('pId').value || 'SP' + Date.now(); let rawAlbum = document.getElementById('pAlbum') ? document.getElementById('pAlbum').value : ""; let arrAlbum = rawAlbum ? rawAlbum.split(',').map(s => s.trim()).filter(s => s) : [];
     const p = { id: id, ten: document.getElementById('pName').value, gia: parseInt(document.getElementById('pPrice').value), anh: document.getElementById('pImg').value, album: arrAlbum, mota: document.getElementById('pDesc') ? document.getElementById('pDesc').value : "" };
     try {
@@ -66,6 +79,7 @@ window.cancelEditP = function () {
     document.getElementById('btnSaveP').innerText = "+ Thêm SP"; if (document.getElementById('btnCancelP')) document.getElementById('btnCancelP').style.display = "none";
 }
 window.delProduct = async function (id) {
+    if (!ensureAdminOperation()) return;
     if (typeof Swal !== 'undefined') {
         Swal.fire({ title: 'Xóa sản phẩm?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Xóa' }).then(async (result) => {
             if (result.isConfirmed) {
@@ -87,6 +101,7 @@ window.renderMaidsAdmin = function () {
     });
 }
 window.saveMaid = async function () {
+    if (!ensureAdminOperation()) return;
     if (!db) return;
     const id = document.getElementById('mId').value || 'GV' + Date.now(); let oldStatus = true;
     const oldDoc = await db.collection("maids").doc(id).get(); if (oldDoc.exists) oldStatus = oldDoc.data().IsAvailable;
@@ -108,24 +123,13 @@ window.cancelEditM = function () {
     if (document.getElementById('mDesc')) document.getElementById('mDesc').value = ''; document.getElementById('btnSaveM').innerText = "+ Thêm GV"; if (document.getElementById('btnCancelM')) document.getElementById('btnCancelM').style.display = "none";
 }
 window.delMaidAdmin = function (id) {
+    if (!ensureAdminOperation()) return;
     if (typeof Swal !== 'undefined') { Swal.fire({ title: 'Xóa nhân viên?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Đồng ý' }).then(async (result) => { if (result.isConfirmed) { if (db) await db.collection("maids").doc(id).delete(); Swal.fire('Đã xóa!', '', 'success'); } }); } 
     else { if (confirm("Xóa?")) db.collection("maids").doc(id).delete(); }
 }
 window.resetData = function () {
-    if (typeof Swal !== 'undefined') {
-        Swal.fire({ title: 'Khôi phục cài đặt gốc?', text: "Hành động này sẽ XÓA TOÀN BỘ dữ liệu trên Firebase!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e74c3c', confirmButtonText: 'Đồng ý, xóa sạch!' }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    if (!db) return; Swal.fire({ title: 'Đang xóa...', allowOutsideClick: false, showConfirmButton: false });
-                    const orders = await db.collection("orders").get(); orders.forEach(doc => doc.ref.delete());
-                    const products = await db.collection("products").get(); products.forEach(doc => doc.ref.delete());
-                    const maids = await db.collection("maids").get(); maids.forEach(doc => doc.ref.delete());
-                    const chats = await db.collection("chats").get(); chats.forEach(doc => doc.ref.delete());
-                    localStorage.clear(); Swal.fire('Thành công!', 'Đã xóa trắng.', 'success').then(() => location.reload());
-                } catch (error) { showToast("Lỗi khi xóa dữ liệu!", "error"); }
-            }
-        });
-    }
+    if (!ensureAdminOperation()) return;
+    showToast("Reset du lieu da bi khoa tren frontend theo chuan bao mat.", "error");
 }
 let myRevenueChart = null; let myStatusChart = null;
 window.veBieuDoThongKe = function(orders) {

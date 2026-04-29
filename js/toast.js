@@ -3,7 +3,8 @@ function showToast(message, type = 'success') {
     if (!container) return;
     const div = document.createElement('div');
     div.className = `toast-msg ${type === 'success' ? 't-success' : 't-error'}`;
-    div.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} t-icon"></i> <span>${message}</span>`;
+    const safeMessage = (typeof escapeHtml === 'function') ? escapeHtml(message) : String(message);
+    div.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} t-icon"></i> <span>${safeMessage}</span>`;
     container.appendChild(div);
     setTimeout(() => {
         div.style.opacity = '0';

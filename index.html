@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Green House - Chăm Sóc Gia Đình</title>
-    <meta name="description" content="Green House - Nền tảng đặt lịch giúp việc và mua sắm vật tư vệ sinh thông minh hàng đầu. Nhanh chóng, uy tín, minh bạch.">
+    <meta name="description"
+        content="Green House - Nền tảng đặt lịch giúp việc và mua sắm vật tư vệ sinh thông minh hàng đầu. Nhanh chóng, uy tín, minh bạch.">
     <meta name="keywords" content="giúp việc, dọn nhà, bảo mẫu, vệ sinh, green house">
     <meta property="og:title" content="Green House - Chăm Sóc Gia Đình">
     <meta property="og:description" content="Hệ sinh thái dịch vụ gia đình hàng đầu. Trao việc khó, nhận thảnh thơi!">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80">
+    <meta property="og:image"
+        content="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80">
     <meta property="og:type" content="website">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
@@ -21,11 +25,13 @@
     <link rel="stylesheet" href="css/shop.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
+
 <body>
     <div id="toast-container"></div>
     <div id="authModal" class="modal"></div>
 
-    <header class="glass-panel" style="margin: 20px auto; width: 95%; max-width: 1300px; border-radius: 100px; padding: 15px 40px; position: sticky; top: 20px;">
+    <header class="glass-panel"
+        style="margin: 20px auto; width: 95%; max-width: 1300px; border-radius: 100px; padding: 15px 40px; position: sticky; top: 20px;">
         <div class="top-bar" style="border: none; padding: 0;">
             <div class="logo"><i class="fas fa-bolt text-neon"></i> Green House</div>
             <nav class="main-nav" style="padding: 0;">
@@ -34,7 +40,8 @@
                 <a href="shop.html">Cửa Hàng Store</a>
             </nav>
             <div class="user-actions">
-                <div class="icon-btn" onclick="openCart()" title="Giỏ hàng" style="background: #f4f9f5; padding: 10px; border-radius: 50%;">
+                <div class="icon-btn" onclick="openCart()" title="Giỏ hàng"
+                    style="background: #f4f9f5; padding: 10px; border-radius: 50%;">
                     <i class="fas fa-shopping-bag" style="font-size: 18px; color: #1f2937;"></i>
                     <span class="badge" id="cartCount" style="right: -2px; top: -2px;">0</span>
                 </div>
@@ -47,16 +54,21 @@
         <section>
             <div class="container hero-3d-container">
                 <div class="hero-text-col reveal-up">
-                    <div style="display: inline-flex; align-items: center; gap: 10px; background: white; padding: 8px 20px; border-radius: 50px; font-weight: 800; font-size: 14px; color: #1f2937; box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-bottom: 30px;">
-                        <div style="width: 10px; height: 10px; background: #ff4757; border-radius: 50%; animation: pulseGreen 2s infinite;"></div>
+                    <div
+                        style="display: inline-flex; align-items: center; gap: 10px; background: white; padding: 8px 20px; border-radius: 50px; font-weight: 800; font-size: 14px; color: #1f2937; box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-bottom: 30px;">
+                        <div
+                            style="width: 10px; height: 10px; background: #ff4757; border-radius: 50%; animation: pulseGreen 2s infinite;">
+                        </div>
                         Hệ thống điều phối tự động 24/7
                     </div>
                     <h1 class="title-mask">Trao Việc Khó, <br><span class="text-neon">Nhận Thảnh Thơi.</span></h1>
                     <p style="font-size: 18px; color: #555; max-width: 500px; line-height: 1.7; font-weight: 600;">
-                        Chỉ với 1 thao tác chạm, hàng ngàn chuyên gia vệ sinh và đầu bếp đã được xác minh sẵn sàng phục vụ gia đình bạn.
+                        Chỉ với 1 thao tác chạm, hàng ngàn chuyên gia vệ sinh và đầu bếp đã được xác minh sẵn sàng phục
+                        vụ gia đình bạn.
                     </p>
                     <div class="floating-search">
-                        <div style="background: #f4f9f5; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 5px;">
+                        <div
+                            style="background: #f4f9f5; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 5px;">
                             <i class="fas fa-search" style="color: #4E9F3D;"></i>
                         </div>
                         <select id="homeSkill">
@@ -71,7 +83,9 @@
                     </div>
                 </div>
                 <div class="hero-visual-col reveal-up stagger-1">
-                    <img loading="lazy" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" class="img-main">
+                    <img loading="lazy"
+                        src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80"
+                        class="img-main">
                     <div class="ui-card-1">
                         <i class="fas fa-shield-alt" style="font-size: 30px; color: #4E9F3D;"></i>
                         <div>
@@ -80,9 +94,11 @@
                         </div>
                     </div>
                     <div class="ui-card-2">
-                        <div style="font-size: 12px; color: #aaa; margin-bottom: 5px; font-weight: bold;">CẬP NHẬT TRỰC TIẾP</div>
+                        <div style="font-size: 12px; color: #aaa; margin-bottom: 5px; font-weight: bold;">CẬP NHẬT TRỰC
+                            TIẾP</div>
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <img loading="lazy" src="https://ui-avatars.com/api/?name=Ngọc&background=2ecc71&color=fff" style="width: 35px; border-radius: 50%;">
+                            <img loading="lazy" src="https://ui-avatars.com/api/?name=Ngọc&background=2ecc71&color=fff"
+                                style="width: 35px; border-radius: 50%;">
                             <div>
                                 <div style="font-weight: 800; font-size: 15px;">Chuyên gia Ngọc</div>
                                 <div style="font-size: 12px; color: #2ecc71;">Vừa nhận lịch tại Q.1</div>
@@ -96,14 +112,17 @@
         <section style="padding: 60px 0;">
             <div class="container">
                 <div style="text-align: center; margin-bottom: 20px;" class="reveal-up">
-                    <h2 style="font-size: 38px; font-weight: 900; color: #1f2937;">Đội Ngũ <span class="text-neon">Chuyên Nghiệp</span></h2>
+                    <h2 style="font-size: 38px; font-weight: 900; color: #1f2937;">Đội Ngũ <span
+                            class="text-neon">Chuyên Nghiệp</span></h2>
                 </div>
                 <div class="bento-grid-container reveal-up stagger-1">
                     <div class="bento-item bento-1" onclick="quickFilter('Dọn dẹp')">
                         <div class="bento-icon"><i class="fas fa-sparkles"></i></div>
                         <h3 class="bento-title" style="font-size: 34px;">Dọn Dẹp Siêu Tốc</h3>
-                        <p class="bento-desc" style="font-size: 18px; max-width: 80%;">Công nghệ làm sạch sinh học kết hợp quy trình 5 bước. Đánh bay mọi vết bẩn cứng đầu chỉ trong 2 giờ làm việc.</p>
-                        <i class="fas fa-arrow-right" style="position: absolute; bottom: 30px; right: 30px; font-size: 24px; color: #4E9F3D; background: white; padding: 15px; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,0.1);"></i>
+                        <p class="bento-desc" style="font-size: 18px; max-width: 80%;">Công nghệ làm sạch sinh học kết
+                            hợp quy trình 5 bước. Đánh bay mọi vết bẩn cứng đầu chỉ trong 2 giờ làm việc.</p>
+                        <i class="fas fa-arrow-right"
+                            style="position: absolute; bottom: 30px; right: 30px; font-size: 24px; color: #4E9F3D; background: white; padding: 15px; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,0.1);"></i>
                     </div>
                     <div class="bento-item bento-2" onclick="quickFilter('Nấu ăn')">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
@@ -112,7 +131,9 @@
                                 <h3 class="bento-title">Đầu Bếp Tại Gia</h3>
                                 <p class="bento-desc">Trải nghiệm thực đơn đa dạng, cân bằng dinh dưỡng mỗi ngày.</p>
                             </div>
-                            <img loading="lazy" src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=200&q=80" style="width: 100px; height: 100px; border-radius: 20px; object-fit: cover;">
+                            <img loading="lazy"
+                                src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=200&q=80"
+                                style="width: 100px; height: 100px; border-radius: 20px; object-fit: cover;">
                         </div>
                     </div>
                     <div class="bento-item bento-3" onclick="quickFilter('Trông trẻ')">
@@ -131,9 +152,12 @@
 
         <section style="padding: 60px 0;">
             <div class="container">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;" class="reveal-up">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;"
+                    class="reveal-up">
                     <h2 style="font-size: 38px; font-weight: 900; color: #1f2937; margin: 0;">Top Chuyên Gia</h2>
-                    <a href="booking.html" style="font-weight: 800; color: #4E9F3D; border-bottom: 2px solid #4E9F3D; padding-bottom: 2px;">Khám phá tất cả</a>
+                    <a href="booking.html"
+                        style="font-weight: 800; color: #4E9F3D; border-bottom: 2px solid #4E9F3D; padding-bottom: 2px;">Khám
+                        phá tất cả</a>
                 </div>
                 <div class="grid-3 reveal-up stagger-1" id="home-maid-list"></div>
             </div>
@@ -141,11 +165,14 @@
 
         <section style="padding: 60px 0;">
             <div class="container reveal-up">
-                <div class="glass-panel" style="background: linear-gradient(135deg, rgba(31, 41, 55, 0.9), rgba(17, 24, 39, 0.9)); padding: 60px; text-align: center; color: white;">
+                <div class="glass-panel"
+                    style="background: linear-gradient(135deg, rgba(31, 41, 55, 0.9), rgba(17, 24, 39, 0.9)); padding: 60px; text-align: center; color: white;">
                     <div style="font-size: 50px; margin-bottom: 20px;">🎁</div>
                     <h2 style="font-size: 36px; font-weight: 900; margin-bottom: 15px;">Ưu Đãi Không Giới Hạn</h2>
-                    <p style="font-size: 18px; color: #9ca3af; margin-bottom: 30px;">Nhập mã giảm giá khi thanh toán để trải nghiệm dịch vụ 5 sao với giá tốt nhất.</p>
-                    <div style="display: inline-flex; background: rgba(255,255,255,0.1); border: 1px dashed rgba(255,255,255,0.3); padding: 15px 30px; border-radius: 15px; font-size: 24px; font-weight: 900; letter-spacing: 3px; color: #2ecc71;">
+                    <p style="font-size: 18px; color: #9ca3af; margin-bottom: 30px;">Nhập mã giảm giá khi thanh toán để
+                        trải nghiệm dịch vụ 5 sao với giá tốt nhất.</p>
+                    <div
+                        style="display: inline-flex; background: rgba(255,255,255,0.1); border: 1px dashed rgba(255,255,255,0.3); padding: 15px 30px; border-radius: 15px; font-size: 24px; font-weight: 900; letter-spacing: 3px; color: #2ecc71;">
                         CLEAR10
                     </div>
                 </div>
@@ -154,7 +181,8 @@
 
         <section style="padding: 60px 0;">
             <div class="container">
-                <h2 style="font-size: 38px; font-weight: 900; color: #1f2937; margin-bottom: 40px;" class="reveal-up">Vật Tư Store</h2>
+                <h2 style="font-size: 38px; font-weight: 900; color: #1f2937; margin-bottom: 40px;" class="reveal-up">
+                    Vật Tư Store</h2>
                 <div class="grid-3 reveal-up stagger-1" id="best-seller-grid">
                     <p style="text-align:center; width: 100%; color: #888;">Đang tải dữ liệu...</p>
                 </div>
@@ -165,11 +193,16 @@
             <div class="container">
                 <div class="hero-3d-container">
                     <div class="hero-text-col reveal-up">
-                        <h2 style="font-size: 45px; font-weight: 900; color: #1f2937; margin-bottom: 20px;">Hãy Để Chúng Tôi <br><span class="text-neon">Lắng Nghe Bạn</span></h2>
-                        <p style="font-size: 16px; color: #666; margin-bottom: 40px;">Mọi đánh giá đều được ghi nhận trực tiếp trên hệ thống Blockchain nội bộ, đảm bảo tính minh bạch 100%.</p>
-                        <div style="background: #f4f9f5; padding: 30px; border-radius: 24px; border: 1px solid #e0e0e0;">
-                            <input type="text" id="rvName" placeholder="Tên hiển thị..." style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; margin-bottom: 15px; font-family: inherit; font-weight: 600; box-sizing: border-box;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                        <h2 style="font-size: 45px; font-weight: 900; color: #1f2937; margin-bottom: 20px;">Hãy Để Chúng
+                            Tôi <br><span class="text-neon">Lắng Nghe Bạn</span></h2>
+                        <p style="font-size: 16px; color: #666; margin-bottom: 40px;">Mọi đánh giá đều được ghi nhận
+                            trực tiếp trên hệ thống Blockchain nội bộ, đảm bảo tính minh bạch 100%.</p>
+                        <div
+                            style="background: #f4f9f5; padding: 30px; border-radius: 24px; border: 1px solid #e0e0e0;">
+                            <input type="text" id="rvName" placeholder="Tên hiển thị..."
+                                style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; margin-bottom: 15px; font-family: inherit; font-weight: 600; box-sizing: border-box;">
+                            <div
+                                style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
                                 <span style="font-weight: 800; color: #333;">Trải nghiệm:</span>
                                 <div class="rating-stars" style="color: #ddd; font-size: 30px; cursor: pointer;">
                                     <span onclick="chonSao(1)" class="star">★</span>
@@ -180,7 +213,8 @@
                                     <input type="hidden" id="rvStar" value="5">
                                 </div>
                             </div>
-                            <textarea id="rvContent" rows="3" placeholder="Chi tiết đánh giá..." style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; margin-bottom: 20px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+                            <textarea id="rvContent" rows="3" placeholder="Chi tiết đánh giá..."
+                                style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; outline: none; margin-bottom: 20px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
                             <button class="btn-hyper" style="width: 100%;" onclick="guiDanhGia()">GỬI ĐÁNH GIÁ</button>
                         </div>
                     </div>
@@ -193,7 +227,8 @@
     </div>
 
     <footer style="background: #1f2937; color: white; padding: 40px 20px; text-align: center;">
-        <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 15px;"><i class="fas fa-bolt text-neon"></i> Green House</h2>
+        <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 15px;"><i class="fas fa-bolt text-neon"></i> Green
+            House</h2>
         <p style="color: #9ca3af; font-weight: 600;">Hệ sinh thái dịch vụ gia đình hàng đầu Việt Nam &copy; 2026</p>
     </footer>
 
@@ -203,12 +238,15 @@
             <h2 style="color:var(--primary); font-weight:900;"><i class="fas fa-shopping-cart"></i> Giỏ Hàng</h2>
             <div id="cartList" style="max-height: 400px; overflow-y: auto; margin-top:15px;"></div>
             <div style="margin-top:20px; display:flex; gap:10px; background:#f9f9f9; padding:15px; border-radius:15px;">
-                <input type="text" id="voucherCode" placeholder="Mã giảm giá (Ví dụ: CLEAR10)" class="form-input" style="flex:1; border-radius:10px;">
-                <button type="button" onclick="applyVoucher()" class="btn-primary" style="border-radius:10px;">ÁP DỤNG</button>
+                <input type="text" id="voucherCode" placeholder="Mã giảm giá (Ví dụ: CLEAR10)" class="form-input"
+                    style="flex:1; border-radius:10px;">
+                <button type="button" onclick="applyVoucher()" class="btn-primary" style="border-radius:10px;">ÁP
+                    DỤNG</button>
             </div>
             <div style="text-align: right; margin-top: 20px; border-top: 2px solid #eee; padding-top: 20px;">
                 <h3 style="font-weight: 900;">Tổng: <span id="cartTotal" style="color:#e91e63;">0 VNĐ</span></h3>
-                <button type="button" class="btn-hyper" style="padding: 12px 40px; margin-top:10px;" onclick="moFormThanhToan()">ĐẶT HÀNG NGAY</button>
+                <button type="button" class="btn-hyper" style="padding: 12px 40px; margin-top:10px;"
+                    onclick="moFormThanhToan()">ĐẶT HÀNG NGAY</button>
             </div>
         </div>
     </div>
@@ -217,48 +255,75 @@
         <div class="modal-content" style="width:500px; max-width:95%; border-radius: 24px;">
             <span class="close-modal" onclick="closeModal('checkoutModal')">×</span>
             <h2 style="color:#4CAF50; font-weight:900;"><i class="fas fa-truck"></i> Thanh Toán</h2>
-            <div id="checkoutItemsContainer" style="padding: 10px; background: #f8faf9; border-radius: 12px; border: 1px solid #e2e8f0; max-height: 180px; overflow-y: auto; margin-bottom: 15px;"></div>
+            <div id="checkoutItemsContainer"
+                style="padding: 10px; background: #f8faf9; border-radius: 12px; border: 1px solid #e2e8f0; max-height: 180px; overflow-y: auto; margin-bottom: 15px;">
+            </div>
             <div style="text-align: left; margin-top: 15px;">
                 <label style="font-weight:800; margin-bottom:5px; display:block;">Họ và tên:</label>
-                <input type="text" id="ckName" class="form-input" style="width:100%; margin-bottom:15px; border-radius:10px;">
+                <input type="text" id="ckName" class="form-input"
+                    style="width:100%; margin-bottom:15px; border-radius:10px;">
                 <label style="font-weight:800; margin-bottom:5px; display:block;">Số điện thoại:</label>
-                <input type="text" id="ckPhone" class="form-input" style="width:100%; margin-bottom:15px; border-radius:10px;">
+                <input type="text" id="ckPhone" class="form-input"
+                    style="width:100%; margin-bottom:15px; border-radius:10px;">
                 <label style="font-weight:800; margin-bottom:5px; display:block;">Địa chỉ nhận hàng:</label>
-                <textarea id="ckAddress" rows="2" class="form-input" style="width:100%; margin-bottom:15px; border-radius:10px;"></textarea>
+                <textarea id="ckAddress" rows="2" class="form-input"
+                    style="width:100%; margin-bottom:15px; border-radius:10px;"></textarea>
                 <label style="font-weight:800; margin-bottom:5px; display:block;">Phương thức:</label>
-                <select id="ckMethod" class="form-input" style="width:100%; margin-bottom:15px; border-radius:10px; font-weight: bold;" onchange="toggleQR()">
+                <select id="ckMethod" class="form-input"
+                    style="width:100%; margin-bottom:15px; border-radius:10px; font-weight: bold;"
+                    onchange="toggleQR()">
                     <option value="COD">Thanh toán khi nhận hàng (COD)</option>
-                    <option value="BANK">Chuyển khoản (QR)</option>
+                    <option value="BANK">MoMo QR</option>
                 </select>
-                <div id="qrBox" style="display:none; text-align:center; background:#f4f9f5; padding:15px; border-radius:12px; border:1px solid #c8e6c9; margin-top:10px;">
-                    <p style="margin:0 0 10px 0; font-weight:800; color:#4E9F3D;">Quét mã thanh toán</p>
-                    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" style="width:150px; height:150px; border-radius:12px; border:3px solid #4E9F3D;">
-                    <p style="margin:10px 0 0 0; font-size:13px; font-weight:700;">Nội dung CK: <b style="color:#000;">DH<span id="qrMaDon"></span></b></p>
-                    <input type="file" id="billUpload" accept="image/*" style="display:block; margin:10px auto 0; font-size: 13px;" onchange="kiemTraBill()">
-                    <div id="billPreview" style="margin-top:10px; color:#4CAF50; font-weight: bold; font-size:13px; display:none;"><i class="fas fa-check-circle"></i> Đã tải ảnh!</div>
+                <div id="qrBox"
+                    style="display:none; text-align:center; background:#f4f9f5; padding:15px; border-radius:12px; border:1px solid #c8e6c9; margin-top:10px;">
+                    <p style="margin:0 0 10px 0; font-weight:800; color:#4E9F3D;">Quét mã MoMo để thanh toán</p>
+                    <img id="paymentQrImage" loading="lazy" src="assets/momo-qr.jpg"
+                        style="width:180px; height:180px; border-radius:12px; border:3px solid #4E9F3D;">
+                    <p style="margin:10px 0 0 0; font-size:13px; font-weight:700;">Ví nhận: <b
+                            style="color:#000;">0563730648 - DAO PHUOC LONG</b></p>
+                    <p style="margin:6px 0 0 0; font-size:13px; font-weight:700;">Số tiền: <b id="qrAmountText"
+                            style="color:#e91e63;">0 VNĐ</b></p>
+                    <p style="margin:6px 0 0 0; font-size:13px; font-weight:700;">Nội dung CK: <b id="qrRefText"
+                            style="color:#000;">DH000000</b></p>
+                    <input type="file" id="billUpload" accept="image/*"
+                        style="display:block; margin:10px auto 0; font-size: 13px;" onchange="kiemTraBill()">
+                    <div id="billPreview"
+                        style="margin-top:10px; color:#4CAF50; font-weight: bold; font-size:13px; display:none;"></div>
                 </div>
             </div>
-            <div style="background:#f9f9f9; padding:15px; border-radius:12px; text-align:right; margin-bottom:20px; margin-top:15px;">
-                <span style="font-weight: 700;">Thành tiền:</span> <h3 style="margin:0; color:#e91e63; font-size:26px; font-weight: 900;" id="ckTotalText">0 VNĐ</h3>
+            <div
+                style="background:#f9f9f9; padding:15px; border-radius:12px; text-align:right; margin-bottom:20px; margin-top:15px;">
+                <span style="font-weight: 700;">Thành tiền:</span>
+                <h3 style="margin:0; color:#e91e63; font-size:26px; font-weight: 900;" id="ckTotalText">0 VNĐ</h3>
             </div>
-            <button type="button" id="btnXacNhan" class="btn-hyper" style="width:100%; padding:15px;" onclick="xacNhanDonHang()">HOÀN TẤT ĐƠN HÀNG</button>
+            <button type="button" id="btnXacNhan" class="btn-hyper" style="width:100%; padding:15px;"
+                onclick="xacNhanDonHang()">HOÀN TẤT ĐƠN HÀNG</button>
         </div>
     </div>
 
-    <div class="chat-btn glass-panel" onclick="toggleChat()" style="background: rgba(78, 159, 61, 0.85); border: 2px solid rgba(255,255,255,0.5);"><i class="fas fa-comment-dots"></i></div>
-    <div class="chat-window" id="chatWindow" style="border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid #eee;">
+    <div class="chat-btn glass-panel" onclick="toggleChat()"
+        style="background: rgba(78, 159, 61, 0.85); border: 2px solid rgba(255,255,255,0.5);"><i
+            class="fas fa-comment-dots"></i></div>
+    <div class="chat-window" id="chatWindow"
+        style="border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid #eee;">
         <div class="chat-header" style="background: #1f2937;">
-            <span style="font-weight: 800;">Trợ Lý Ảo Green House</span><span onclick="toggleChat()" style="cursor:pointer; font-size: 20px;">×</span>
+            <span style="font-weight: 800;">Trợ Lý Ảo Green House</span><span onclick="toggleChat()"
+                style="cursor:pointer; font-size: 20px;">×</span>
         </div>
         <div class="chat-body" id="chatBody"></div>
         <div class="chat-footer">
-            <input id="chatInput" placeholder="Nhập tin nhắn..." onkeypress="handleChat(event)" style="flex:1; padding: 12px 15px; border-radius: 50px; border: 1px solid #ddd; outline: none; background: #f9f9f9; font-weight: 600;">
-            <button onclick="sendChat()" style="background:#4E9F3D; color:white; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; margin-left: 10px; box-shadow: 0 5px 15px rgba(78, 159, 61, 0.3);">➤</button>
+            <input id="chatInput" placeholder="Nhập tin nhắn..." onkeypress="handleChat(event)"
+                style="flex:1; padding: 12px 15px; border-radius: 50px; border: 1px solid #ddd; outline: none; background: #f9f9f9; font-weight: 600;">
+            <button onclick="sendChat()"
+                style="background:#4E9F3D; color:white; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; margin-left: 10px; box-shadow: 0 5px 15px rgba(78, 159, 61, 0.3);">➤</button>
         </div>
     </div>
     <div id="maidDetailModal" class="modal">
-        <div class="modal-content" style="width: 900px; max-width: 95%; border-radius: 24px; padding: 35px; overflow-y: auto; max-height: 90vh;">
-            <span class="close-modal" onclick="closeModal('maidDetailModal')" style="position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; z-index: 10;">×</span>
+        <div class="modal-content"
+            style="width: 900px; max-width: 95%; border-radius: 24px; padding: 35px; overflow-y: auto; max-height: 90vh;">
+            <span class="close-modal" onclick="closeModal('maidDetailModal')"
+                style="position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; z-index: 10;">×</span>
             <div id="maidDetailBody"></div>
         </div>
     </div>
@@ -270,10 +335,12 @@
     <script src="js/toast.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/profile.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/6.0.1/tesseract.min.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/booking.js"></script>
     <script src="js/shop.js"></script>
     <script src="js/main.js"></script>
     <script src="js/init.js"></script>
 </body>
+
 </html>

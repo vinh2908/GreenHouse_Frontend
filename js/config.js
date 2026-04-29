@@ -14,7 +14,19 @@ try {
 } catch (error) { console.error("Lỗi Firebase:", error); }
 
 const API_URL = "https://greenhouse-backend-2lok.onrender.com/api";
-let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function parseStoredJson(key, fallbackValue) {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallbackValue;
+    try {
+        return JSON.parse(raw);
+    } catch (e) {
+        localStorage.removeItem(key);
+        return fallbackValue;
+    }
+}
+
+let currentUser = parseStoredJson('currentUser', null);
+let cart = parseStoredJson('cart', []);
 let currentDiscount = 0;
 const MY_BANK_QR = "https://i.pinimg.com/736x/e2/21/02/e22102058f2d0231696cebf979a925ac.jpg";

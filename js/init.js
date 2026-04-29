@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById('maid-list-container') && typeof renderMaidListPro === 'function') window.renderMaidListPro('all', 'all');
     if (document.getElementById('shop-product-grid') && typeof renderAllProducts === 'function') window.renderAllProducts();
     
-    const phoneInputs = ['#regPhone', '#username', '#bkPhoneReal', '#ckPhone', '#forgotPhone'];
+    const phoneInputs = ['#regPhone', '#bkPhoneReal', '#ckPhone', '#forgotPhone'];
     phoneInputs.forEach(selector => {
         const inputElement = document.querySelector(selector);
         if (inputElement && window.intlTelInput) {

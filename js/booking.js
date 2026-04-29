@@ -17,32 +17,108 @@ window.quickBook = function (id, name, img, exp) {
     }
 }
 window.confirmBookingReal = async function() {
-    if(!db) return showToast('Lỗi kết nối Firebase!', 'error');
-    const date = document.getElementById('bkDate').value; const time = document.getElementById('bkStartTime').value; const dur = document.getElementById('bkDuration').value; const addr = document.getElementById('bkAddress').value.trim(); const phone = document.getElementById('bkPhoneReal').value.trim(); const totalStr = document.getElementById('bkTotal').innerText; const maidName = document.getElementById('sbName').dataset.name; const maidId = document.getElementById('sbName').dataset.id; const serviceElement = document.getElementById('bkService'); const serviceName = serviceElement ? serviceElement.options[serviceElement.selectedIndex].text : "Dịch vụ";
-    if (!date || !time || !dur || !phone || !addr) return showToast("Vui lòng điền đủ thông tin!", "error"); 
-    if (parseFloat(dur) <= 0) return showToast("Thời lượng làm việc phải ít nhất là 1 tiếng!", "error");
-    let now = new Date(); let todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0'); let currentMins = now.getHours() * 60 + now.getMinutes();
-    if (date < todayStr) return showToast("Không thể đặt lịch cho ngày trong quá khứ!", "error");
-    if (date === todayStr && timeToMinutes(time) <= currentMins) return showToast("Giờ bắt đầu đã trôi qua, vui lòng chọn giờ lớn hơn hiện tại!", "error");
+    if(!db) return showToast('Loi ket noi Firebase!', 'error');
+    const date = document.getElementById('bkDate').value;
+    const time = document.getElementById('bkStartTime').value;
+    const dur = document.getElementById('bkDuration').value;
+    const addr = document.getElementById('bkAddress').value.trim();
+    const phone = document.getElementById('bkPhoneReal').value.trim();
+    const totalStr = document.getElementById('bkTotal').innerText;
+    const maidName = document.getElementById('sbName').dataset.name;
+    const maidId = document.getElementById('sbName').dataset.id;
+    const serviceElement = document.getElementById('bkService');
+    const serviceName = serviceElement ? serviceElement.options[serviceElement.selectedIndex].text : 'Dich vu';
+
+    if (!date || !time || !dur || !phone || !addr) return showToast('Vui long dien du thong tin!', 'error');
+    if (parseFloat(dur) <= 0) return showToast('Thoi luong lam viec phai toi thieu 1 gio!', 'error');
+
+    let now = new Date();
+    let todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+    let currentMins = now.getHours() * 60 + now.getMinutes();
+    if (date < todayStr) return showToast('Khong the dat lich cho ngay trong qua khu!', 'error');
+    if (date === todayStr && timeToMinutes(time) <= currentMins) return showToast('Gio bat dau da troi qua, vui long chon gio muon hon.', 'error');
+
     let btnConfirm = document.querySelector('.btn-confirm-elite') || document.querySelector('button[onclick="confirmBookingReal()"]');
-    if (btnConfirm) { btnConfirm.disabled = true; btnConfirm.innerText = "ĐANG KIỂM TRA LỊCH..."; }
+    if (btnConfirm) { btnConfirm.disabled = true; btnConfirm.innerText = 'DANG KIEM TRA LICH...'; }
+
     try {
-        const reqStart = timeToMinutes(time); const reqEnd = reqStart + (parseFloat(dur) * 60);
-        const snap = await db.collection("orders").where("maidId", "==", maidId).where("workDate", "==", date).get();
+        const reqStart = timeToMinutes(time);
+        const reqEnd = reqStart + (parseFloat(dur) * 60);
+
+        const snap = await db.collection('orders').where('maidId', '==', maidId).where('workDate', '==', date).get();
         let isOverlap = false;
         snap.forEach(doc => {
             let o = doc.data();
-            if (o.isPaid === true || o.status === 'confirmed' || o.status === 'done') {
-                let oStart = timeToMinutes(o.workTime); let oEnd = oStart + (parseFloat(o.workDuration) * 60);
+            if (o.status !== 'cancelled') {
+                let oStart = timeToMinutes(o.workTime);
+                let oEnd = oStart + (parseFloat(o.workDuration) * 60);
                 if (reqStart < oEnd && reqEnd > oStart) isOverlap = true;
             }
         });
-        if (isOverlap) { if (btnConfirm) { btnConfirm.disabled = false; btnConfirm.innerText = "GỬI YÊU CẦU"; } return showToast("Nhân viên đã có khách chốt lịch giờ này. Vui lòng chọn giờ khác!", "error"); }
-        let newOrder = { id: 'DV' + Math.floor(Math.random() * 99999), user: currentUser.phone, customerInfo: { name: currentUser.name, phone: phone, address: addr }, items: `Gói: ${serviceName} - Chuyên gia: ${maidName} (${dur} tiếng, từ ${time} ngày ${date})`, maidId: maidId, total: parseInt(totalStr.replace(/\./g, '')), status: 'pending', isPaid: false, date: new Date().toLocaleString(), workDate: date, workTime: time, workDuration: dur, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
-        await db.collection("orders").doc(newOrder.id).set(newOrder); 
-        closeBooking(); showToast(`Đã gửi yêu cầu đặt lịch! (Đang chờ thanh toán)`, "success"); 
-        if (btnConfirm) { btnConfirm.disabled = false; btnConfirm.innerText = "GỬI YÊU CẦU"; }
-    } catch (error) { showToast("Lỗi kết nối máy chủ!", "error"); if (btnConfirm) { btnConfirm.disabled = false; btnConfirm.innerText = "GỬI YÊU CẦU"; } }
+        if (isOverlap) throw new Error('SLOT_CONFLICT');
+
+        const orderId = 'DV' + Date.now() + Math.floor(Math.random() * 1000000);
+        const orderRef = db.collection('orders').doc(orderId);
+        const lockRef = db.collection('booking_day_locks').doc(`${maidId}_${date}`);
+
+        const newOrder = {
+            id: orderId,
+            user: currentUser.phone,
+            customerInfo: { name: currentUser.name, phone: phone, address: addr },
+            items: `Goi: ${serviceName} - Chuyen gia: ${maidName} (${dur} gio, tu ${time} ngay ${date})`,
+            maidId: maidId,
+            total: parseInt(totalStr.replace(/\./g, '')),
+            status: 'pending',
+            isPaid: false,
+            date: new Date().toLocaleString(),
+            workDate: date,
+            workTime: time,
+            workDuration: dur,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        await db.runTransaction(async (transaction) => {
+            const lockDoc = await transaction.get(lockRef);
+            const lockData = lockDoc.exists ? lockDoc.data() : {};
+            const reservations = Array.isArray(lockData.reservations) ? lockData.reservations : [];
+
+            const conflict = reservations.some(r => {
+                if (!r || r.status === 'cancelled') return false;
+                const start = Number(r.startMinutes || 0);
+                const end = Number(r.endMinutes || 0);
+                return reqStart < end && reqEnd > start;
+            });
+            if (conflict) throw new Error('SLOT_CONFLICT');
+
+            reservations.push({
+                orderId: orderId,
+                startMinutes: reqStart,
+                endMinutes: reqEnd,
+                status: 'pending',
+                createdAtMs: Date.now()
+            });
+
+            transaction.set(lockRef, {
+                maidId: maidId,
+                workDate: date,
+                reservations: reservations,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+
+            transaction.set(orderRef, newOrder);
+        });
+
+        closeBooking();
+        showToast('Da gui yeu cau dat lich! (Dang cho thanh toan)', 'success');
+    } catch (error) {
+        if (error && error.message === 'SLOT_CONFLICT') {
+            showToast('Nhan vien da co lich trung gio nay. Vui long chon gio khac!', 'error');
+        } else {
+            showToast('Loi ket noi may chu!', 'error');
+        }
+    } finally {
+        if (btnConfirm) { btnConfirm.disabled = false; btnConfirm.innerText = 'GUI YEU CAU'; }
+    }
 }
 window.calculateTotal = function () {
     let bkService = document.getElementById('bkService'); let bkDuration = document.getElementById('bkDuration');
@@ -139,8 +215,7 @@ window.checkCompletedJobs = async function() {
             else if (o.workDate === todayStr) { let endMins = timeToMinutes(o.workTime) + (parseFloat(o.workDuration) * 60); if (currentMinutes > endMins) isPast = true; }
             if (isPast) {
                 let maidName = "chuyên gia"; try { let mDoc = await db.collection("maids").doc(o.maidId).get(); if(mDoc.exists) maidName = mDoc.data().Name || mDoc.data().name || "chuyên gia"; } catch(e){}
-                let msgHTML = `Tuyệt vời! Ca làm việc của <b>${maidName}</b> ngày ${o.workDate} đã hoàn thành. <br><br><button onclick="openMaidReviewModal('${o.maidId}', '${o.id}')" style="background:#e91e63; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-weight:bold; width:100%; box-shadow:0 3px 10px rgba(0,0,0,0.1);">⭐ ĐÁNH GIÁ CHẤT LƯỢNG</button>`;
-                let chatRef = db.collection("chats").doc(currentUser.phone); let newMessage = { sender: 'admin', text: msgHTML, time: new Date().toLocaleTimeString() };
+                let chatRef = db.collection("chats").doc(currentUser.phone); let newMessage = { sender: 'admin', type: 'review_prompt', maidId: o.maidId, orderId: o.id, maidName: maidName, workDate: o.workDate, time: new Date().toLocaleTimeString() };
                 try {
                     let chatDoc = await chatRef.get();
                     if (chatDoc.exists) { await chatRef.update({ messages: firebase.firestore.FieldValue.arrayUnion(newMessage), lastUpdated: firebase.firestore.FieldValue.serverTimestamp() }); } 
@@ -184,8 +259,10 @@ window.submitMaidReview = async function() {
         if (chatDoc.exists) {
             let msgs = chatDoc.data().messages; let updated = false;
             for (let i = 0; i < msgs.length; i++) {
-                if (msgs[i].text.includes(`openMaidReviewModal('${currentReviewMaidId}', '${currentReviewOrderId}')`)) {
-                    msgs[i].text = msgs[i].text.replace(`onclick="openMaidReviewModal('${currentReviewMaidId}', '${currentReviewOrderId}')"`, `disabled="true"`).replace("⭐ ĐÁNH GIÁ CHẤT LƯỢNG", "✅ ĐÃ ĐÁNH GIÁ").replace("background:#e91e63", "background:#bdc3c7").replace("cursor:pointer", "cursor:not-allowed"); updated = true;
+                if (msgs[i].type === 'review_prompt' && msgs[i].maidId === currentReviewMaidId && msgs[i].orderId === currentReviewOrderId) {
+                    msgs[i].type = 'review_prompt_done';
+                    msgs[i].text = 'Ban da danh gia chat luong cho ca lam viec nay.';
+                    updated = true;
                 }
             }
             if(updated) { await chatRef.update({ messages: msgs }); if (typeof listenClientChat === 'function') listenClientChat(); }

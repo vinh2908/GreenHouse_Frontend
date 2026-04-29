@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cửa Hàng Store - Green House</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
@@ -90,14 +91,16 @@
                 <label style="font-weight:800; margin-bottom:5px; display:block;">Phương thức:</label>
                 <select id="ckMethod" class="form-input" style="width:100%; margin-bottom:15px; border-radius:10px; font-weight: bold;" onchange="toggleQR()">
                     <option value="COD">Thanh toán khi nhận hàng (COD)</option>
-                    <option value="BANK">Chuyển khoản (QR)</option>
+                    <option value="BANK">MoMo QR</option>
                 </select>
                 <div id="qrBox" style="display:none; text-align:center; background:#f4f9f5; padding:15px; border-radius:12px; border:1px solid #c8e6c9; margin-top:10px;">
-                    <p style="margin:0 0 10px 0; font-weight:800; color:#4E9F3D;">Quét mã thanh toán</p>
-                    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" style="width:150px; height:150px; border-radius:12px; border:3px solid #4E9F3D;">
-                    <p style="margin:10px 0 0 0; font-size:13px; font-weight:700;">Nội dung CK: <b style="color:#000;">DH<span id="qrMaDon"></span></b></p>
+                    <p style="margin:0 0 10px 0; font-weight:800; color:#4E9F3D;">Quét mã MoMo để thanh toán</p>
+                    <img id="paymentQrImage" loading="lazy" src="assets/momo-qr.jpg" style="width:180px; height:180px; border-radius:12px; border:3px solid #4E9F3D;">
+                    <p style="margin:10px 0 0 0; font-size:13px; font-weight:700;">Ví nhận: <b style="color:#000;">0563730648 - DAO PHUOC LONG</b></p>
+                    <p style="margin:6px 0 0 0; font-size:13px; font-weight:700;">Số tiền: <b id="qrAmountText" style="color:#e91e63;">0 VNĐ</b></p>
+                    <p style="margin:6px 0 0 0; font-size:13px; font-weight:700;">Nội dung CK: <b id="qrRefText" style="color:#000;">DH000000</b></p>
                     <input type="file" id="billUpload" accept="image/*" style="display:block; margin:10px auto 0; font-size: 13px;" onchange="kiemTraBill()">
-                    <div id="billPreview" style="margin-top:10px; color:#4CAF50; font-weight: bold; font-size:13px; display:none;"><i class="fas fa-check-circle"></i> Đã tải ảnh!</div>
+                    <div id="billPreview" style="margin-top:10px; color:#4CAF50; font-weight: bold; font-size:13px; display:none;"></div>
                 </div>
             </div>
             <div style="background:#f9f9f9; padding:15px; border-radius:12px; text-align:right; margin-bottom:20px; margin-top:15px;">
@@ -126,6 +129,7 @@
     <script src="js/toast.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/profile.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/6.0.1/tesseract.min.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/booking.js"></script>
     <script src="js/shop.js"></script>

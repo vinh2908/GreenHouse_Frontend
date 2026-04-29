@@ -3,6 +3,20 @@ window.timeToMinutes = function(timeStr) {
     let parts = timeStr.split(':');
     return parseInt(parts[0]) * 60 + parseInt(parts[1]);
 };
+
+window.escapeHtml = function (value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+};
+
+window.escapeHtmlWithBreaks = function (value) {
+    return window.escapeHtml(value).replace(/\r?\n/g, '<br>');
+};
 window.xuLyChonFile = function (input, targetId) {
     if (input.files[0]) {
         const r = new FileReader();
