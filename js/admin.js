@@ -1,4 +1,9 @@
 function loadAdminData() { renderOrders(); renderProductsAdmin(); renderMaidsAdmin(); loadChatUsers(); }
+function escapeAdminHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, function (char) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
+    });
+}
 function ensureAdminOperation() {
     if (!currentUser || currentUser.role !== 'Admin') {
         showToast("Admin session required.", "error");
@@ -23,12 +28,17 @@ window.renderOrders = function () {
         snapshot.forEach((doc) => {
             let o = doc.data(); ordersArray.push(o);
             let info = o.customerInfo || {}; let addr = info.address ? `<br><small>📍 ${info.address}</small>` : ''; let actionBtn = ''; let statusBadge = '';
-            if (o.status === 'pending') {
+            const hasPaymentProof = o.paymentProofStatus === 'ocr_verified_pending_admin' || !!o.paymentProof;
+            const waitingPaymentReview = o.status === 'awaiting_payment_review' && hasPaymentProof;
+            if (waitingPaymentReview) {
+                statusBadge = '<span style="color:#f39c12;font-weight:bold">🧾 Chờ duyệt bill</span>';
+                actionBtn = `<button class="btn-action" style="background:#3498db; margin-bottom:5px;" onclick="viewPaymentProof('${o.id}')">👁 Xem Bill</button><button class="btn-action" style="background:#2ecc71; margin-bottom:5px;" onclick="approvePaidOrder('${o.id}')">✅ Xác nhận TT</button><button class="btn-action" style="background:#e74c3c" onclick="rejectPaymentProof('${o.id}')">❌ Từ chối</button>`;
+            } else if (o.status === 'pending') {
                 if (o.maidId) { statusBadge = '<span style="color:#f39c12;font-weight:bold">⏳ Chờ duyệt</span>'; actionBtn = `<button class="btn-action" style="background:#2ecc71" onclick="approveBookingToPayment('${o.id}')">✅ Duyệt Lịch</button>`; } 
                 else { statusBadge = '<span style="color:#f39c12">⏳ Chờ giao</span>'; actionBtn = `<button class="btn-action" style="background:#3498db" onclick="doneOrder('${o.id}')">🚚 Giao Hàng</button>`; }
             } else if (o.status === 'awaiting_payment') { statusBadge = '<span style="color:#e74c3c;font-weight:bold">⏳ Khách chưa TT</span>'; actionBtn = `<i class="fas fa-clock" style="color:#e74c3c"></i>`; } 
             else if (o.status === 'confirmed' || o.status === 'done') { statusBadge = '<span style="color:#2ecc71;font-weight:bold">✅ Hoàn tất</span>'; actionBtn = '<i class="fas fa-check" style="color:#2ecc71"></i>'; }
-            let paymentBadge = (o.isPaid === true) ? `<br><span style="display:inline-block; margin-top:5px; background:#e8f5e9; color:#2e7d32; padding:4px 10px; border-radius:12px; font-size:12px; border:1px solid #4CAF50;"><i class="fas fa-money-bill-wave"></i> Đã Thanh Toán</span>` : `<br><span style="display:inline-block; margin-top:5px; background:#fdf2f2; color:#e74c3c; padding:4px 10px; border-radius:12px; font-size:12px; border:1px solid #f5b7b1;">Chưa Thanh Toán</span>`;
+            let paymentBadge = (o.isPaid === true) ? `<br><span style="display:inline-block; margin-top:5px; background:#e8f5e9; color:#2e7d32; padding:4px 10px; border-radius:12px; font-size:12px; border:1px solid #4CAF50;"><i class="fas fa-money-bill-wave"></i> Đã Thanh Toán</span>` : (waitingPaymentReview ? `<br><span style="display:inline-block; margin-top:5px; background:#fff7ed; color:#c2410c; padding:4px 10px; border-radius:12px; font-size:12px; border:1px solid #fdba74;"><i class="fas fa-receipt"></i> Đã upload bill</span>` : `<br><span style="display:inline-block; margin-top:5px; background:#fdf2f2; color:#e74c3c; padding:4px 10px; border-radius:12px; font-size:12px; border:1px solid #f5b7b1;">Chưa Thanh Toán</span>`);
             tb.innerHTML += `<tr><td>#${o.id}<br><small>${o.date}</small></td><td><strong>${info.name || o.user}</strong><br><small>${info.phone || ''}</small>${addr}</td><td>${o.items}</td><td><b style="color:#e91e63">${parseInt(o.total || 0).toLocaleString()} đ</b>${paymentBadge}</td><td>${statusBadge}</td><td>${actionBtn}</td></tr>`;
         });
         if (typeof veBieuDoThongKe === 'function') veBieuDoThongKe(ordersArray);
@@ -44,6 +54,63 @@ window.approveBookingToPayment = function (orderId) {
     }
 }
 window.doneOrder = async function (orderId) { if (!ensureAdminOperation()) return; if (!db) return; await db.collection("orders").doc(orderId).update({ status: 'done', isPaid: true }); showToast('Đã cập nhật!', 'success'); }
+window.viewPaymentProof = async function (orderId) {
+    if (!db) return;
+    const doc = await db.collection("orders").doc(orderId).get();
+    if (!doc.exists) return showToast('Không tìm thấy đơn hàng!', 'error');
+    const order = doc.data() || {};
+    const proof = order.paymentProof || {};
+    const imageData = proof.imageData || '';
+    const ocrExtract = proof.ocrExtract ? `<pre style="text-align:left; white-space:pre-wrap; max-height:160px; overflow:auto; background:#f8f9fa; padding:10px; border-radius:8px; font-size:12px;">${escapeAdminHtml(proof.ocrExtract)}</pre>` : '';
+    if (!imageData) return showToast('Đơn này chưa có ảnh bill.', 'error');
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: `Bill đơn #${order.id}`,
+            html: `<img src="${imageData}" style="max-width:100%; max-height:420px; object-fit:contain; border-radius:10px; border:1px solid #eee;">${ocrExtract}`,
+            width: 700,
+            confirmButtonText: 'Đóng'
+        });
+    } else {
+        const win = window.open();
+        if (win) win.document.write(`<img src="${imageData}" style="max-width:100%">`);
+    }
+}
+window.approvePaidOrder = async function (orderId) {
+    if (!ensureAdminOperation()) return;
+    if (!db) return;
+    const update = {
+        status: 'done',
+        isPaid: true,
+        paymentProofStatus: 'admin_approved',
+        paidAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({ title: 'Xác nhận thanh toán?', text: 'Đơn hàng sẽ được đánh dấu đã thanh toán và hoàn tất.', icon: 'question', showCancelButton: true, confirmButtonColor: '#4CAF50', cancelButtonColor: '#e74c3c', confirmButtonText: 'Xác nhận', cancelButtonText: 'Hủy' }).then(async (result) => {
+            if (result.isConfirmed) { await db.collection("orders").doc(orderId).update(update); showToast('Đã xác nhận thanh toán!', 'success'); }
+        });
+    } else {
+        await db.collection("orders").doc(orderId).update(update);
+        showToast('Đã xác nhận thanh toán!', 'success');
+    }
+}
+window.rejectPaymentProof = async function (orderId) {
+    if (!ensureAdminOperation()) return;
+    if (!db) return;
+    const update = {
+        status: 'awaiting_payment',
+        isPaid: false,
+        paymentProofStatus: 'admin_rejected',
+        reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({ title: 'Từ chối bill?', text: 'Khách sẽ thấy đơn cần thanh toán lại.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#e74c3c', cancelButtonColor: '#777', confirmButtonText: 'Từ chối', cancelButtonText: 'Hủy' }).then(async (result) => {
+            if (result.isConfirmed) { await db.collection("orders").doc(orderId).update(update); showToast('Đã từ chối bill.', 'success'); }
+        });
+    } else {
+        await db.collection("orders").doc(orderId).update(update);
+        showToast('Đã từ chối bill.', 'success');
+    }
+}
 window.renderProductsAdmin = async function () {
     const tb = document.querySelector('#productTable tbody'); if (!tb) return;
     tb.innerHTML = '<tr><td colspan="4" style="text-align:center;">Đang tải dữ liệu...</td></tr>';
