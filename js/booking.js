@@ -18,8 +18,8 @@ window.quickBook = function (id, name, img, exp) {
 }
 
 function generateBookingPaymentReference() {
-    const ts = Date.now().toString().slice(-6);
-    const rand = Math.floor(Math.random() * 900 + 100).toString();
+    const ts = Date.now().toString().slice(-4);
+    const rand = Math.floor(Math.random() * 90 + 10).toString();
     return `DV${ts}${rand}`;
 }
 
