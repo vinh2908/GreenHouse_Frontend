@@ -6,6 +6,7 @@ let paymentReferenceCode = '';
 let paymentProofVerified = false;
 let paymentProofOcrText = '';
 let paymentProofImageData = '';
+let tesseractLoaderPromise = null;
 
 window.openCart = function () {
     if (!currentUser) return showToast("Vui long dang nhap!", "error");
@@ -205,6 +206,19 @@ function readBillFileAsDataUrl(file) {
     });
 }
 
+function ensureTesseractLoaded() {
+    if (window.Tesseract) return Promise.resolve(window.Tesseract);
+    if (tesseractLoaderPromise) return tesseractLoaderPromise;
+    tesseractLoaderPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/6.0.1/tesseract.min.js';
+        script.onload = () => resolve(window.Tesseract);
+        script.onerror = () => reject(new Error('tesseract_load_failed'));
+        document.head.appendChild(script);
+    });
+    return tesseractLoaderPromise;
+}
+
 window.moFormThanhToan = function () {
     const selectedItems = cart.filter(x => x.selected);
     if (selectedItems.length === 0) return showToast("Chon it nhat 1 SP!", "error");
@@ -289,8 +303,9 @@ window.kiemTraBill = async function () {
     try {
         paymentProofImageData = await readBillFileAsDataUrl(file);
 
-        if (!window.Tesseract) throw new Error('ocr_lib_missing');
-        const ocrResult = await window.Tesseract.recognize(file, 'eng');
+        const TesseractLib = await ensureTesseractLoaded();
+        if (!TesseractLib) throw new Error('ocr_lib_missing');
+        const ocrResult = await TesseractLib.recognize(file, 'eng');
         const normalizedText = normalizeOcrTextForCheck(ocrResult && ocrResult.data ? ocrResult.data.text : '');
         paymentProofOcrText = normalizedText;
 

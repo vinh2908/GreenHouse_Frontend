@@ -4,6 +4,8 @@ const SERVICE_MOMO_BANK_ID = 'momo';
 let currentServicePaymentOrder = null;
 let serviceBillVerified = false;
 let serviceBillOcrText = '';
+let serviceTesseractLoaderPromise = null;
+let profileOrdersUnsubscribe = null;
 
 function buildServicePaymentQrUrl(totalAmount, orderRef) {
     const query = new URLSearchParams({
@@ -40,6 +42,66 @@ function serviceContainsExpectedAmount(ocrText, expectedAmount) {
     );
 }
 
+function prepareServiceFastOcrImage(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function () {
+            const img = new Image();
+            img.onload = function () {
+                const maxWidth = 1200;
+                const scale = Math.min(1, maxWidth / img.width);
+                const w = Math.max(1, Math.round(img.width * scale));
+                const h = Math.max(1, Math.round(img.height * scale));
+                const baseCanvas = document.createElement('canvas');
+                baseCanvas.width = w;
+                baseCanvas.height = h;
+                const baseCtx = baseCanvas.getContext('2d');
+                if (!baseCtx) return reject(new Error('canvas_unavailable'));
+                baseCtx.drawImage(img, 0, 0, w, h);
+
+                const cropTop = Math.floor(h * 0.42);
+                const cropHeight = Math.max(1, h - cropTop);
+                const cropCanvas = document.createElement('canvas');
+                cropCanvas.width = w;
+                cropCanvas.height = cropHeight;
+                const cropCtx = cropCanvas.getContext('2d');
+                if (!cropCtx) return reject(new Error('canvas_unavailable'));
+                cropCtx.drawImage(baseCanvas, 0, cropTop, w, cropHeight, 0, 0, w, cropHeight);
+                resolve(cropCanvas.toDataURL('image/jpeg', 0.9));
+            };
+            img.onerror = function () { reject(new Error('image_decode_failed')); };
+            img.src = reader.result;
+        };
+        reader.onerror = function () { reject(new Error('read_failed')); };
+        reader.readAsDataURL(file);
+    });
+}
+
+function isServiceBillMatch(normalizedText) {
+    const normalized = normalizeServiceOcr(normalizedText);
+    const normalizedAscii = normalizeServiceAscii(normalized);
+    const expectedId = String((currentServicePaymentOrder && currentServicePaymentOrder.id) || '').toUpperCase();
+    const expectedTotal = Number((currentServicePaymentOrder && currentServicePaymentOrder.total) || 0);
+    const hasAmount = serviceContainsExpectedAmount(normalized, expectedTotal);
+    const hasRef = expectedId ? normalized.includes(expectedId) : false;
+    const hasPhone = normalized.includes(SERVICE_MOMO_PHONE);
+    const hasName = normalizedAscii.includes(normalizeServiceAscii(SERVICE_MOMO_NAME));
+    return hasAmount && hasRef && (hasPhone || hasName);
+}
+
+function ensureServiceTesseractLoaded() {
+    if (window.Tesseract) return Promise.resolve(window.Tesseract);
+    if (serviceTesseractLoaderPromise) return serviceTesseractLoaderPromise;
+    serviceTesseractLoaderPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/6.0.1/tesseract.min.js';
+        script.onload = () => resolve(window.Tesseract);
+        script.onerror = () => reject(new Error('tesseract_load_failed'));
+        document.head.appendChild(script);
+    });
+    return serviceTesseractLoaderPromise;
+}
+
 window.openProfile = function () {
     let profileModal = document.getElementById('profileModal');
     if (profileModal) profileModal.remove();
@@ -66,7 +128,8 @@ window.openProfile = function () {
     list.innerHTML = '<p style="text-align:center; color:#999;">Dang tai du lieu tu may...</p>';
 
     if (currentUser && db) {
-        db.collection("orders").where("user", "==", currentUser.phone).onSnapshot((snapshot) => {
+        if (typeof profileOrdersUnsubscribe === 'function') profileOrdersUnsubscribe();
+        profileOrdersUnsubscribe = db.collection("orders").where("user", "==", currentUser.phone).onSnapshot((snapshot) => {
             list.innerHTML = '';
             if (snapshot.empty) {
                 list.innerHTML = '<p style="text-align:center; color:#999; font-style: italic;">Ban chua co giao dich nao.</p>';
@@ -169,20 +232,21 @@ window.checkServiceBill = async function () {
     btnXacNhan.disabled = true;
 
     try {
-        if (!window.Tesseract) throw new Error('ocr_lib_missing');
-        const ocrResult = await window.Tesseract.recognize(file, 'eng');
-        const normalized = normalizeServiceOcr(ocrResult && ocrResult.data ? ocrResult.data.text : '');
-        const normalizedAscii = normalizeServiceAscii(normalized);
-        serviceBillOcrText = normalized;
+        const TesseractLib = await ensureServiceTesseractLoaded();
+        if (!TesseractLib) throw new Error('ocr_lib_missing');
+        const fastOcrImage = await prepareServiceFastOcrImage(file);
+        const fastResult = await TesseractLib.recognize(fastOcrImage, 'eng');
+        const fastText = normalizeServiceOcr(fastResult && fastResult.data ? fastResult.data.text : '');
+        serviceBillOcrText = fastText;
+        serviceBillVerified = isServiceBillMatch(fastText);
 
-        const expectedId = String((currentServicePaymentOrder && currentServicePaymentOrder.id) || '').toUpperCase();
-        const expectedTotal = Number((currentServicePaymentOrder && currentServicePaymentOrder.total) || 0);
-        const hasAmount = serviceContainsExpectedAmount(normalized, expectedTotal);
-        const hasRef = expectedId ? normalized.includes(expectedId) : false;
-        const hasPhone = normalized.includes(SERVICE_MOMO_PHONE);
-        const hasName = normalizedAscii.includes(normalizeServiceAscii(SERVICE_MOMO_NAME));
+        if (!serviceBillVerified) {
+            const fullResult = await TesseractLib.recognize(file, 'eng');
+            const fullText = normalizeServiceOcr(fullResult && fullResult.data ? fullResult.data.text : '');
+            serviceBillOcrText = fullText;
+            serviceBillVerified = isServiceBillMatch(fullText);
+        }
 
-        serviceBillVerified = hasAmount && hasRef && (hasPhone || hasName);
         if (serviceBillVerified) {
             billPreview.style.color = '#4CAF50';
             billPreview.innerHTML = '<i class="fas fa-check-circle"></i> Bill hop le: dung so tien, noi dung CK va nguoi nhan.';
