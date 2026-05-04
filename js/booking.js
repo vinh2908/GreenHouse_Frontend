@@ -16,6 +16,13 @@ window.quickBook = function (id, name, img, exp) {
         document.getElementById('bkTotal').innerText = "0";
     }
 }
+
+function generateBookingPaymentReference() {
+    const ts = Date.now().toString().slice(-6);
+    const rand = Math.floor(Math.random() * 900 + 100).toString();
+    return `DV${ts}${rand}`;
+}
+
 window.confirmBookingReal = async function() {
     if(!db) return showToast('Loi ket noi Firebase!', 'error');
     const date = document.getElementById('bkDate').value;
@@ -63,6 +70,7 @@ window.confirmBookingReal = async function() {
 
         const newOrder = {
             id: orderId,
+            paymentReference: generateBookingPaymentReference(),
             user: currentUser.phone,
             customerInfo: { name: currentUser.name, phone: phone, address: addr },
             items: `Goi: ${serviceName} - Chuyen gia: ${maidName} (${dur} gio, tu ${time} ngay ${date})`,

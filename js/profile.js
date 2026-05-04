@@ -80,7 +80,7 @@ function prepareServiceFastOcrImage(file) {
 function isServiceBillMatch(normalizedText) {
     const normalized = normalizeServiceOcr(normalizedText);
     const normalizedAscii = normalizeServiceAscii(normalized);
-    const expectedId = String((currentServicePaymentOrder && currentServicePaymentOrder.id) || '').toUpperCase();
+    const expectedId = String((currentServicePaymentOrder && currentServicePaymentOrder.reference) || '').toUpperCase();
     const expectedTotal = Number((currentServicePaymentOrder && currentServicePaymentOrder.total) || 0);
     const hasAmount = serviceContainsExpectedAmount(normalized, expectedTotal);
     const hasRef = expectedId ? normalized.includes(expectedId) : false;
@@ -167,8 +167,9 @@ window.openServicePayment = function (orderId) {
         if (!doc.exists) return;
         let order = doc.data();
         let orderTotal = parseInt(order.total || 0);
-        let dynamicQrSrc = buildServicePaymentQrUrl(orderTotal, order.id);
-        currentServicePaymentOrder = { id: order.id, total: orderTotal };
+        let transferRef = order.paymentReference || order.id;
+        let dynamicQrSrc = buildServicePaymentQrUrl(orderTotal, transferRef);
+        currentServicePaymentOrder = { id: order.id, reference: transferRef, total: orderTotal };
         serviceBillVerified = false;
         serviceBillOcrText = '';
 
@@ -182,7 +183,7 @@ window.openServicePayment = function (orderId) {
                         <img loading="lazy" src="${dynamicQrSrc}" style="width:180px; height:180px; border-radius:10px; margin-bottom:15px; object-fit:cover; border:2px solid #eee;">
                         <p style="margin:0 0 6px 0; font-size:13px; color:#555;">Vi nhan: <b style="color:#000;">${SERVICE_MOMO_PHONE} - ${SERVICE_MOMO_NAME}</b></p>
                         <h3 style="margin:0; color:#e91e63; font-size:26px;">${orderTotal.toLocaleString()} VND</h3>
-                        <p style="margin:5px 0 0; font-size:13px; color:#555;">Noi dung CK: <b style="color:#000;">${order.id}</b></p>
+                        <p style="margin:5px 0 0; font-size:13px; color:#555;">Noi dung CK: <b style="color:#000;">${transferRef}</b></p>
                     </div>
                     <div style="margin-bottom: 20px; text-align: left; border-top: 1px dashed #ccc; padding-top: 15px;">
                         <label style="font-weight:bold; color:#333; display:block; margin-bottom:10px;"><i class="fas fa-file-upload"></i> Tai len anh chup man hinh (Bill):</label>
