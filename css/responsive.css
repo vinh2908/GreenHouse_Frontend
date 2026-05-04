@@ -62,3 +62,72 @@
     .mrb-row { flex-direction: column; }
     .m-rating { justify-content: center; }
 }
+
+@media screen and (max-width: 768px) {
+    html, body { overflow-x: hidden; }
+    .container { padding: 20px 14px !important; }
+    .main-content section { padding: 20px 0 !important; }
+
+    header.glass-panel { margin: 10px auto !important; top: 10px !important; width: calc(100% - 20px) !important; }
+    .main-nav a { padding: 8px 10px; border-radius: 10px; }
+
+    .dropdown-list { left: 0 !important; width: 100% !important; max-width: 100% !important; }
+    .dropdown-item { font-size: 14px !important; padding: 12px 14px !important; }
+
+    .modal { padding: 10px !important; box-sizing: border-box; align-items: flex-end; }
+    .modal-content, .split-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        border-radius: 16px !important;
+        padding: 16px !important;
+        max-height: 88svh !important;
+    }
+    .close-modal {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 24px !important;
+        top: 8px !important;
+        right: 8px !important;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-input,
+    .form-input-elite,
+    select,
+    input,
+    textarea,
+    button {
+        font-size: 16px !important;
+    }
+
+    .btn-primary, .btn-hyper, .btn-submit { min-height: 44px; }
+
+    .toast-msg {
+        min-width: 0 !important;
+        width: calc(100vw - 24px) !important;
+        margin-right: 0 !important;
+        box-sizing: border-box;
+    }
+    #toast-container {
+        right: 12px !important;
+        left: 12px !important;
+        top: 12px !important;
+    }
+
+    .elite-card, .maid-card-premium { height: 380px !important; border-radius: 16px !important; }
+    .elite-overlay { height: 66% !important; padding: 16px !important; }
+    .elite-book-btn { opacity: 1 !important; transform: none !important; }
+
+    .chat-window { right: 10px !important; width: calc(100vw - 20px) !important; height: 74svh !important; }
+}
+
+@media screen and (max-width: 480px) {
+    .title-mask { font-size: 32px !important; line-height: 1.15; }
+    .login-logo { font-size: 22px !important; }
+    .auth-tab { font-size: 15px !important; }
+    .tabs .tab-btn { width: 100% !important; }
+    .hero-visual-col { height: 280px !important; }
+    .pd-main-img { height: 220px !important; }
+}
