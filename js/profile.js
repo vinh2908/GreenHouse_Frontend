@@ -142,13 +142,23 @@ window.openProfile = function () {
             myOrders.forEach(o => {
                 let st = '';
                 let action = '';
-                if (o.status === 'pending') {
+                const isServiceOrder = !!o.maidId;
+                const hasUploadedPaymentProof = o.paymentProofStatus === 'ocr_verified_pending_admin' || !!o.paymentProof;
+                const isPaidOrder = o.isPaid === true || o.status === 'confirmed' || o.status === 'done';
+
+                if (isPaidOrder) {
+                    st = '<span style="color:#2ecc71;font-weight:bold;">Da thanh toan</span>';
+                } else if (!isServiceOrder && o.status === 'awaiting_payment_review' && hasUploadedPaymentProof) {
+                    st = '<span style="color:#f39c12; font-weight:bold;">Dang cho duyet bill</span>';
+                } else if (o.status === 'pending') {
                     st = '<span style="color:#f39c12; font-weight:bold;">Dang cho duyet</span>';
-                } else if (o.status === 'awaiting_payment' || o.status === 'awaiting_payment_review') {
+                } else if (isServiceOrder && (o.status === 'awaiting_payment' || o.status === 'awaiting_payment_review')) {
                     st = '<span style="color:#e74c3c; font-weight:bold;">Cho thanh toan</span>';
                     action = `<button onclick="openServicePayment('${o.id}')" style="background:#e91e63; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-size:13px; margin-top:10px; width:100%; font-weight:bold; box-shadow:0 3px 10px rgba(233,30,99,0.3);"><i class="fas fa-credit-card"></i> THANH TOAN NGAY</button>`;
-                } else if (o.status === 'confirmed' || o.status === 'done') {
-                    st = '<span style="color:#2ecc71;font-weight:bold;">Da thanh toan</span>';
+                } else if (o.status === 'awaiting_payment_review') {
+                    st = '<span style="color:#f39c12; font-weight:bold;">Dang cho duyet bill</span>';
+                } else if (o.status === 'awaiting_payment') {
+                    st = '<span style="color:#e74c3c; font-weight:bold;">Cho thanh toan</span>';
                 }
 
                 let typeIcon = o.maidId
