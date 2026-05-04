@@ -8,6 +8,32 @@ let paymentProofOcrText = '';
 let paymentProofImageData = '';
 let tesseractLoaderPromise = null;
 
+async function saveOrderWithBackendFallback(order) {
+    let apiBase = window.API_URL || (typeof API_URL !== 'undefined' ? API_URL : '');
+    if (typeof window.syncBackendApi === 'function') {
+        apiBase = await window.syncBackendApi();
+    }
+
+    try {
+        const response = await fetch(`${apiBase}/orders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(order)
+        });
+        if (!response.ok) throw new Error(`BACKEND_REJECTED_${response.status}`);
+        return;
+    } catch (error) {
+        console.warn('Backend order save failed, falling back to Firestore:', error);
+        if (!db) throw error;
+        await db.collection("orders").doc(order.id).set({
+            ...order,
+            backendSyncStatus: 'pending',
+            backendSyncError: String(error && error.message ? error.message : error),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+    }
+}
+
 window.openCart = function () {
     if (!currentUser) return showToast("Vui long dang nhap!", "error");
     document.getElementById('cartModal').style.display = 'flex';
@@ -400,12 +426,7 @@ window.xacNhanDonHang = async function () {
             } : null
         };
 
-        const response = await fetch(`${API_URL}/orders`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newOrder)
-        });
-        if (!response.ok) throw new Error("May chu Backend tu choi don hang");
+        await saveOrderWithBackendFallback(newOrder);
 
         cart = cart.filter(x => !x.selected);
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -415,7 +436,8 @@ window.xacNhanDonHang = async function () {
         closeModal('checkoutModal');
         showToast("Dat hang thanh cong!", "success");
     } catch (error) {
-        showToast("Loi ket noi may chu!", "error");
+        console.error('Order confirmation failed:', error);
+        showToast("Loi luu don hang. Vui long thu lai!", "error");
     } finally {
         if (btnXacNhan) {
             btnXacNhan.disabled = false;

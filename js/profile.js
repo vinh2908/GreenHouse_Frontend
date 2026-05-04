@@ -283,22 +283,27 @@ window.confirmServicePayment = async function (orderId) {
     }
     setTimeout(async () => {
         try {
+            if (!db) throw new Error('FIRESTORE_UNAVAILABLE');
             const orderRef = db.collection("orders").doc(orderId);
             await db.runTransaction(async (transaction) => {
                 const orderDoc = await transaction.get(orderRef);
                 if (!orderDoc.exists) throw new Error('ORDER_NOT_FOUND');
                 const order = orderDoc.data() || {};
+                const needsSchedule = order.maidId && order.workDate && order.workTime && order.workDuration;
+                const maidRef = needsSchedule ? db.collection("maids").doc(String(order.maidId)) : null;
+                const lockRef = needsSchedule ? db.collection('booking_day_locks').doc(`${order.maidId}_${order.workDate}`) : null;
+                const maidDoc = maidRef ? await transaction.get(maidRef) : null;
+                const lockDoc = lockRef ? await transaction.get(lockRef) : null;
 
                 transaction.update(orderRef, {
                     status: 'confirmed',
                     isPaid: true,
                     paymentProofStatus: 'client_confirmed_paid',
-                    paidAt: firebase.firestore.FieldValue.serverTimestamp()
+                    paidAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    paymentReference: order.paymentReference || (currentServicePaymentOrder && currentServicePaymentOrder.reference) || order.id
                 });
 
-                if (order.maidId && order.workDate && order.workTime && order.workDuration) {
-                    const maidRef = db.collection("maids").doc(String(order.maidId));
-                    const maidDoc = await transaction.get(maidRef);
+                if (needsSchedule) {
                     const maidData = maidDoc.exists ? (maidDoc.data() || {}) : {};
                     const schedules = Array.isArray(maidData.schedules) ? maidData.schedules : [];
                     const duration = String(order.workDuration);
@@ -317,8 +322,6 @@ window.confirmServicePayment = async function (orderId) {
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
 
-                    const lockRef = db.collection('booking_day_locks').doc(`${order.maidId}_${order.workDate}`);
-                    const lockDoc = await transaction.get(lockRef);
                     const lockData = lockDoc.exists ? (lockDoc.data() || {}) : {};
                     const reservations = Array.isArray(lockData.reservations) ? lockData.reservations : [];
                     const toMins = (timeStr) => {
@@ -359,7 +362,8 @@ window.confirmServicePayment = async function (orderId) {
             showToast("Thanh toan thanh cong! Lich cua nhan vien da duoc khoa ngay.", "success");
             if (document.getElementById('dynamicPaymentModal')) closeDiag('dynamicPaymentModal');
         } catch (error) {
-            showToast("Loi xac nhan giao dich!", "error");
+            console.error('Service payment confirmation failed:', error);
+            showToast("Loi cap nhat thanh toan. Vui long kiem tra ket noi va thu lai.", "error");
             if (btn) {
                 btn.disabled = false;
                 btn.innerText = "THU LAI";
